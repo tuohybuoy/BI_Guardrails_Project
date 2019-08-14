@@ -1,0 +1,205 @@
+Subject	Subject Description
+ACCY	Accountancy
+ASRM	Actuarial Science & Risk Management
+ADV	Advertising
+AE	Aerospace Engineering
+AFRO	African American Studies
+AFST	African Studies
+ACE	Agr & Consumer Economics
+ACES	Agr, Consumer, & Env Sciences
+AGCM	Agricultural Communications
+AGED	Agricultural Education
+ABE	Agricultural and Biological Eng
+AFAS	Air Force Aerospace Studies
+AIS	American Indian Studies
+ANSC	Animal Sciences
+ANTH	Anthropology
+AHS	Applied Health Sci Courses
+ARAB	Arabic
+ARCH	Architecture
+ART	Art
+ARTD	Art--Design
+ARTE	Art--Education
+ARTF	Art--Foundation
+ARTH	Art--History
+ARTS	Art--Studio
+AAS	Asian American Studies
+ASST	Asian Studies
+ASTR	Astronomy
+ATMS	Atmospheric Sciences
+BMNA	Bamana
+BASQ	Basque
+BIOC	Biochemistry
+BIOE	Bioengineering
+BIOL	Biology
+BSE	Biomedical Sciences and Engineering
+BIOP	Biophysics
+BCS	Bosnian-Croatian-Serbian
+BCOG	Brain and Cognitive Science
+BULG	Bulgarian
+BUS	Business
+BADM	Business Administration
+BTW	Business and Technical Writing
+CHP	Campus Honors Program
+CATL	Catalan
+CDB	Cell and Developmental Biology
+CAS	Center for Advanced Study
+CHBE	Chemical and Biomolecular Engr
+CHEM	Chemistry
+CHIN	Chinese
+CEE	Civil and Environ Engineering
+CLCV	Classical Civilization
+CLE	Clinical Sciences and Engineering
+CIC	Committee on Inst Cooperation
+CMN	Communication
+CHLH	Community Health
+CWL	Comparative & World Literature
+CB	Comparative Biosciences
+CSE	Computational Science and Engr
+CS	Computer Science
+CW	Creative Writing
+CPSC	Crop Sciences
+CI	Curriculum and Instruction
+CZCH	Czech
+DANC	Dance
+EALC	E. Asian Languages & Cultures
+ESE	Earth, Society, & Environment
+ECON	Economics
+EPOL	Ed Policy, Org & Ldership
+EOL	Educ Organization & Leadership
+EDUC	Education
+EPS	Educational Policy Studies
+EDPR	Educational Practice
+EPSY	Educational Psychology
+ECE	Electrical and Computer Engr
+ENG	Engineering
+ENGH	Engineering Honors
+ENGL	English
+ESL	English as a Second Language
+EIL	English as an Intl Language
+ENT	Entomology
+ENVS	Environmental Studies
+ENSU	Environmental Sustainability
+EURO	European Union Studies
+FIN	Finance
+FAA	Fine and Applied Arts
+FSHN	Food Science & Human Nutrition
+FLTE	Foreign Language Teacher Education
+FR	French
+GWS	Gender and Women's Studies
+GE	General Engineering
+GS	General Studies
+GEOG	Geography
+GEOL	Geology
+GER	German
+GMC	Germanic
+GLBL	Global Studies
+GC	Graduate College
+GCL	Grand Challenge Learning
+GRK	Greek
+HEBR	Hebrew, Modern and Classical
+HNDI	Hindi
+HIST	History
+HORT	Horticulture
+HDFS	Human Dev and Family Studies
+HDES	Human Dimensions of Env Sys
+HRD	Human Resource Development
+HRE	Human Resource Education
+HUM	Humanities Courses
+IHLT	I-Health
+IE	Industrial Engineering
+INFO	Informatics
+IS	Information Sciences
+IB	Integrative Biology
+ITAL	Italian
+JAPN	Japanese
+JS	Jewish Studies
+JOUR	Journalism
+KIN	Kinesiology
+KOR	Korean
+LER	Labor and Employment Relations
+LA	Landscape Architecture
+LAT	Latin
+LAST	Latin American & Caribbean St
+LLS	Latina/Latino Studies
+LAW	Law
+LAS	Liberal Arts and Sciences
+LIS	Library & Information Science
+LGLA	Lingala
+LING	Linguistics
+SLCL	LiteraturesCulturesLinguistics
+MBA	MBA Program
+MSE	Materials Science & Engr
+MATH	Mathematics
+ME	Mechanical Engineering
+MDIA	Media
+MACS	Media and Cinema Studies
+MSP	Medical Scholars Program
+MDVL	Medieval Studies
+MICR	Microbiology
+MILS	Military Science
+GRKM	Modern Greek
+MCB	Molecular and Cell Biology
+MIP	Moleculr & Integrative Physiol
+MUSE	Museum Studies
+MUS	Music
+NRES	Natural Resources & Environ Sc
+NS	Naval Science
+NEUR	Neuroscience
+NPRE	Nuclear, Plasma, Radiolg Engr
+NUTR	Nutritional Sciences
+PATH	Pathobiology
+PERS	Persian
+PHIL	Philosophy
+PHYS	Physics
+PBIO	Plant Biology
+PLPA	Plant Pathology
+POL	Polish
+PS	Political Science
+PORT	Portuguese
+PSM	Professional Science Master
+PSYC	Psychology
+RST	Recreation, Sport, and Tourism
+REHB	Rehabilitation Counseling
+REL	Religion
+RLST	Religious Studies
+RHET	Rhetoric and Composition
+RMLG	Romance Linguistics
+RSOC	Rural Sociology
+RUSS	Russian
+REES	Russian, East European and Eurasian Studies
+SAME	S. Asian & Middle Eastern
+SNSK	Sanskrit
+SCAN	Scandinavian
+SLS	Second Language Studies
+SLAV	Slavic
+SOCW	Social Work
+SOC	Sociology
+SPAN	Spanish
+SPED	Special Education
+SHS	Speech and Hearing Science
+STAT	Statistics
+SBC	Strategic Brand Communication
+SWAH	Swahili
+SE	Systems Engineering and Design
+TSM	Technical Systems Management
+TE	Technology Entrepreneurship
+TMGT	Technology and Management
+THEA	Theatre
+TAM	Theoretical and Appl Mechanics
+TRST	Translation Studies
+TURK	Turkish
+UKR	Ukrainian
+UP	Urban and Regional Planning
+VCM	Veterinary Clinical Medicine
+VM	Veterinary Medicine Courses
+WLOF	Wolof
+WGGP	Women and Gender in Global Perspectives
+WRIT	Writing Studies
+YDSH	Yiddish
+ZULU	Zulu
+AVI	Aviation
+SCR	Serbo-Croatian
+CINE	Cinema Studies
+MS	Media Studies
+VB	Veterinary Biosciences
