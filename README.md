@@ -25,6 +25,8 @@ The Guardrails app attempts to meet that need.
 
 ![UIUC Grade Explorer with Inferential Guardrails - Start Page](common/images/App_Start_Page.png)
 
+## The Pieces
+
 ## The Dataset
 
 For a demonstration, the application uses the [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa) compiled by Prof. Wade Fagen-Ulmschneider, and used here with his kind permission.

@@ -571,7 +571,7 @@ filterLOVList <- populateLOVs(CrsGrades, filterFields, filterInitVals)
 
 # Page layout and controls
 
-ui <- fluidPage(
+ui <- fixedPage(
   # CSS to help titles and labels look reasonable.
   # Disable code to scale(), which could otherwise help with laptop displays that are scaled up.
   # In Firefox and Opera, scale() causes flickering tooltips.
