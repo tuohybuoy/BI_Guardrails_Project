@@ -35,21 +35,8 @@ library(shiny)
 
 registerDoParallel()
 
-# Strings for apps title, help text, and documentation link
-
-appTitle <- paste("Where Are Particular",
-                  a(href="https://github.com/wadefagen/datasets/tree/master/gpa", target="_blank", "UIUC Course Grades"),
-                  "Significantly Rare or Common?")
-
-appHelpText <- paste0("Explore which ",
-                      a(href="https://courses.illinois.edu/", "UIUC courses"),
-                      ", instructors, etc. award significantly different grades than others. ",
-                      "Colors indicate size and direction of difference.")
-
-# Only run this if executing locally
-# Not needed for R project in the same folder
-#workDir <- "C:/Users/ktuoh/Documents/Datasets/UIUC_GPA_Dataset"
-#setwd(workDir)
+# Project documentation & help link
+docLink <- "https://github.com/tuohybuoy/BI_Guardrails_Project/blob/master/README.md"
 
 # Read course grade data.
 
@@ -589,6 +576,9 @@ ui <- fixedPage(
       # }
       "h2 {
          font-size: x-large; margin-left: 10px;
+      } .col-sm-2 {
+        vertical-align: middle;
+      }
       } .help-block {
          margin-left: 10px;
       } strong {
@@ -606,10 +596,10 @@ ui <- fixedPage(
       }"
     ))
   ),
-  titlePanel("Where Are Particular UIUC Course Grades Significantly Rare or Common?"),
+  fixedRow(column(width=10, titlePanel("Where Are Particular UIUC Course Grades Significantly Rare or Common?")),
+           column(width=2, a(href=docLink, "Help"))
+  ),
   helpText("Explore which UIUC courses, instructors, etc. award significantly different grades than others. Colors indicate size and direction of difference."),
-  #titlePanel(appTitle),
-  #helpText(appHelpText),
   sidebarLayout(
     sidebarPanel(
       # Choose from available course grades
@@ -664,13 +654,18 @@ ui <- fixedPage(
     mainPanel(
       tabsetPanel(
         tabPanel("Bar Plot",
-                 div(style='height:750px; width:750px; overflow-y: scroll',
+                 div(style='height:750px; width:750; overflow-y: scroll',
                      ggvisOutput(plot_id="outGGVisPlot"))
         ),
         tabPanel("Table", tableOutput(outputId="outTable"))
       )
     )
-  )
+  ) #,
+  # wellPanel(fluidRow(
+  #   column(width=4, a(href=repoLink, "Project repository and documentation")),
+  #   column(width=4, a(href=datasetLink, "The UIUC GPA Dataset")),
+  #   column(width=4, a(href=uiucCoursesLink, "UIUC Course Explorer"))
+  # ))
 )
 
 # Page business logic and output
