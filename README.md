@@ -7,21 +7,35 @@ Part 1 of ?: Percentage Bar Charts
 
 ## Intro
 
-By themselves, percentage bar charts are handy for comparing groups of differing size. For example, if Reed Richards teaches 100 students and Doctor Doom teaches 500, a percentage bar chart can easily show that Richards awards As to 80% of his students while Doom awards only 20% As:
+### Why This Project?
+
+The strength of BI can also be its weakness. By themselves, charts and visuals are powerful tools for summarizing large datasets for a nontechnical audience. However, the same audience is often left to determine what conclusions to draw from the visual. Conclusions are often based on gut feelings. Arguably, this is the opposite of the desired goal when using data to aid decisionmaking.
+
+For example, take the percentage bar chart. It's a useful tool for comparing proportions between groups of differing size. In an academic setting, it could compare the percentages of As that different instructors award to their students. Take an example where Prof. Richards has 100 students and Dr. Doom has 500:
 
 ![Richards vs. Doom A Grades Awarded](common/images/Richards_vs_Doom_Grades.png)
 
-But what if Reed Richards has only 5, 10 or 20 students instead of 100? When is the number too small to be meaningful for comparing the two instructors? And if a comparison is still meaningful, is the difference significant if Doom becomes generous and awards 75% As compared to Richards' 80%?
+Here, it looks obvious that Prof. Richards is more likely to award As. 50% is certainly a higher proportion than 30%. But what if Richards only has six students? The chart doesn't help determine whether the difference is still meaningful, and in fact actively impedes efforts to determine this by looking exactly the same as the 100-vs.-500 case.
 
-This application uses inferential statistics to help address these questions. Hopefully, using it requires little to no knowledge of statistics at all. The results look something like this:
+Workarounds exist, such as shading or setting bar thickness by the number of students for each instructor. However, they don't address the core issue that it's up to viewers to decide what differences are likely to be meaningful.
+
+### Inferential Statistics to the Rescue
+
+Statistical techniques can readily provide ways to pinpoint group differences that are more likely to be meaningful. Those same techniques can give insight into how big or small a difference is likely to be. Even better, they allow a viewer to choose cutoffs for the level of certainty they desire.
+
+This project uses four closely-related attributes to make this determination:
+* *Sample size:* how many students does an instructor or group of instructors have?
+* *Effect size:* how big or small is the difference between one instructor and others?
+* *Significance:* how likely is the difference to be a false positive? The most typical cutoff for this likelihood is 5%.
+* *Power:* if the "true" effect size is what the chart shows, how likely is it that we could correctly identify it? Typical cutoffs are 80%, 90% and 95%.
+
+The results might look something like this:
 
 ![Richards vs. Doom A Grades Awarded, with Effect Size](common/images/Richards_vs_Doom_Grades_with_Effect_Size.png)
 
-This is a simple example. In reality, we want to compare dozens or hundreds of instructors or courses.
+Note: the Percentage Bar Chart tool can compare dozens or hundreds of instructors or courses. This makes it potentially useful even for subject matter experts, who might otherwise be hard-pressed to digest this volume of information.
 
-With those volumes, it would certainly be useful to have statistical backup when gauging whether and how a course differs from the others. It would be even more useful to focus on differences that meet a particular threshold of certainty.
-
-The Guardrails app attempts to meet that need.
+For more details about the statistical tests employed, see [Statistics](#statistics) below.
 
 ![UIUC Grade Explorer with Inferential Guardrails - Start Page](common/images/App_Start_Page.png)
 
