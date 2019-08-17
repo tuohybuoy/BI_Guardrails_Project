@@ -579,13 +579,16 @@ ui <- fixedPage(
       } .col-sm-2 {
         padding-top: 5px;
       } .project-link {
+        width: 115px;
         text-align: center;
         vertical-align: middle;
         background-color: #f5f5f5;
         border-style: solid;
-        border-width: thin;
+        border-width: 1px;
         border-color: #cccccc;
         padding: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
       } .help-block {
          margin-left: 10px;
       } strong {
