@@ -36,7 +36,7 @@ library(shiny)
 registerDoParallel()
 
 # Project documentation & help link
-docLink <- "https://github.com/tuohybuoy/BI_Guardrails_Project/blob/master/README.md"
+projectLink <- "https://github.com/tuohybuoy/BI_Guardrails_Project/blob/master/README.md"
 
 # Read course grade data.
 
@@ -577,8 +577,15 @@ ui <- fixedPage(
       "h2 {
          font-size: x-large; margin-left: 10px;
       } .col-sm-2 {
+        padding-top: 5px;
+      } .project-link {
+        text-align: center;
         vertical-align: middle;
-      }
+        background-color: #f5f5f5;
+        border-style: solid;
+        border-width: thin;
+        border-color: #cccccc;
+        padding: 5px;
       } .help-block {
          margin-left: 10px;
       } strong {
@@ -587,8 +594,7 @@ ui <- fixedPage(
          font-weight: 500; font-style: italic;
       } .form-group, .selectize-control, .checkbox {
          margin-bottom: 4px;
-      }
-      .box-body {
+      } .box-body {
          padding-bottom: 4px;
       } .tooltip, .popover
       {
@@ -597,7 +603,7 @@ ui <- fixedPage(
     ))
   ),
   fixedRow(column(width=10, titlePanel("Where Are Particular UIUC Course Grades Significantly Rare or Common?")),
-           column(width=2, a(href=docLink, "Help"))
+           column(width=2, div(class="project-link", a(href=projectLink, target="_blank", "Project & Documentation")))
   ),
   helpText("Explore which UIUC courses, instructors, etc. award significantly different grades than others. Colors indicate size and direction of difference."),
   sidebarLayout(
