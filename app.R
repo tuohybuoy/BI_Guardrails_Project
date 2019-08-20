@@ -591,6 +591,8 @@ ui <- fixedPage(
         border-radius: 5px;
       } .help-block {
          margin-left: 10px;
+      } .shiny-input-panel {
+         padding: 6px;
       } strong {
          margin-bottom: 10px;
       } label {
@@ -599,6 +601,10 @@ ui <- fixedPage(
          margin-bottom: 4px;
       } .box-body {
          padding-bottom: 4px;
+      } .confidence-hr {
+        border-width: 1px;
+        border-color: #cccccc;
+        margin: 8px;
       } .tooltip, .popover
       {
          pointer-events: none;
@@ -649,13 +655,14 @@ ui <- fixedPage(
       inputPanel(
         verticalLayout(
           strong("Choose Desired Confidence"),
-          # Minimum achieved power
-          sliderInput(inputId="MinPower", label="Min Chance of Seeing True Difference of Achieved Size",
-                      min=50, max=100, value=80, step=1, post="%"),
           # Alpha threshold
           sliderInput(inputId="Alpha", label="Max Chance of False Positive",
                       min=0.1, max=20, value=5, step=0.1, post="%"),
-          checkboxInput(inputId="AlphaAdjust", label="Adjust False Positive Test by Number of Groups", value=TRUE)
+          checkboxInput(inputId="AlphaAdjust", label="Adjust False Positive Test by Number of Groups", value=TRUE),
+          hr(class="confidence-hr"),
+          # Minimum achieved power
+          sliderInput(inputId="MinPower", label="Min Chance of Accurately-Estimated Difference Size",
+                      min=50, max=100, value=80, step=1, post="%")
         )
       ),
       width=3
