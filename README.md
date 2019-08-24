@@ -9,15 +9,15 @@ Part 1 of ?: Percentage Bar Charts
 
 ### Why This Project?
 
-The strength of BI can also be its weakness. By themselves, charts and visuals are powerful tools for summarizing large datasets for a nontechnical audience. However, the same audience is often left to determine what conclusions to draw from the visual. Conclusions are often based on gut feelings. Arguably, this is the opposite of the desired goal when using data to aid decisionmaking.
+The strength of business intelligence, or BI, can also be its weakness. By themselves, charts and visuals are powerful tools for summarizing large datasets for a nontechnical audience. However, the same audience is often left to determine what conclusions to draw from the visual. Conclusions are often based on gut feelings. Arguably, this is the opposite of the desired goal when using data to aid decisionmaking.
 
 For example, take the percentage bar chart. It's a useful tool for comparing proportions between groups of differing size. In an academic setting, it could compare the percentages of As that different instructors award to their students. Take an example where Prof. Richards has 100 students and Dr. Doom has 500:
 
 ![Richards vs. Doom A Grades Awarded](common/images/Richards_vs_Doom_Grades.png)
 
-Here, it looks obvious that Prof. Richards is more likely to award As. 50% is certainly a higher proportion than 30%. But what if Richards only has ten students, or six? The chart doesn't help determine whether the difference is still meaningful, and in fact actively impedes efforts to determine this by looking exactly the same as the 100-vs.-500 case.
+Here, it looks obvious that Prof. Richards is more likely to award As. 50% is certainly a higher proportion than 30%. But what if Richards only has ten students, or six? The chart doesn't help determine whether the difference is still meaningful, and in fact actively impedes efforts to determine this by looking exactly like the 100-vs.-500 case.
 
-Workarounds exist, such as shading or setting bar thickness by the number of students for each instructor. However, they don't address the core issue that it's up to viewers to decide what differences are likely to be meaningful.
+Workarounds exist, such as shading or setting bar thickness by the number of students for each instructor. However, they don't address the core issue that it's up to viewers to determine what differences are likely to be real.
 
 ### Inferential Statistics to the Rescue
 
