@@ -25,7 +25,6 @@ library(ggvis)
 library(scales)
 # Libraries for power, effect size and parallelism
 library(pwr)
-library(statmod)
 library(iterators)
 library(doParallel)
 library(foreach)
@@ -62,12 +61,31 @@ testTypes <- c("Auto", "Binomial Exact", "Fisher's Exact", "X2 Goodness of Fit",
 testTypeInitVal = "Binomial Exact"
 testType <- testTypeInitVal  # Placeholder for "Test Type" user input
 
+# Magnitudes and cutoffs for effect sizes.
+effectSizeMagnitudes <- data.frame(EffectSizeMagnitude=c("NA", "Tiny", "Small", "Medium", "Large"),
+                                   # Conventional cutoffs for chi-square effect sizes
+                                   EffectSizeX2=c(-0.00001,
+                                                  0.00001,
+                                                  cohen.ES(test="chisq", size="small")$effect.size,
+                                                  cohen.ES(test="chisq", size="medium")$effect.size,
+                                                  cohen.ES(test="chisq", size="large")$effect.size),
+                                   # Cutoffs for exact tests of proportions
+                                   EffectSizeExact=c(-0.00001,
+                                                     0.00001,
+                                                     cohen.ES(test="p", size="small")$effect.size,
+                                                     cohen.ES(test="p", size="medium")$effect.size,
+                                                     cohen.ES(test="p", size="large")$effect.size),
+                                   stringsAsFactors=FALSE)
+
 # Labels and colors for effect sizes, with sign included.
 # The sign will indicate whether a given measure is smaller or larger in comparison to others.
 effectSizeLblsColors <- data.frame(EffectSizeLabel=c("+ Large", "+ Medium", "+ Small", "+ Tiny", "NA", "- Tiny", "- Small", "- Medium", "- Large"),
                                    # Orange-blue diverging color palette, obtained from RColorBrewer site: http://colorbrewer2.org/
                                    EffectSizeColor=c("#2166ac", "#4393c3", "#92c5de", "#d1e5f0", "#f7f7f7", "#fee0b6", "#fdb863", "#e08214", "#b35806"),
                                    stringsAsFactors=FALSE)
+
+effectSizeExcludeChoice <- "NA"      # Don't show "NA" as a dropdown choice for effect sizes
+effectSizeDefaultChoice <- "Large"   # Default choice for Effect Size dropdown
 
 # Controls to help determine whether to auto-resize chart as selections change
 autoChartResize <- TRUE
@@ -91,6 +109,16 @@ renameFilterFieldValCol <- function(filterField) { "filterValue" }
 
 isNotNA <- function(x) { !is.na(x) }
 
+# Given an effect-size label, get the correponding cutoff.
+
+effectSizeCutoff <- function(testType, effectSizeLabel) {
+  # Return cutoff corresponding to test type.
+  case_when(
+    str_detect(testType, "X2") ~ effectSizeMagnitudes$EffectSizeX2[effectSizeMagnitudes$EffectSizeMagnitude==effectSizeLabel],
+    TRUE ~ effectSizeMagnitudes$EffectSizeExact[effectSizeMagnitudes$EffectSizeMagnitude==effectSizeLabel]
+  )
+}
+
 # Function to label effect sizes for chi-square goodness of fit tests.
 # Include sign to indicate direction of difference in a comparison:
 # smaller = negative, larger = positive
@@ -99,23 +127,15 @@ labelEffectSizes <- function(testType, effectSizes) {
   
   effectSizeBreaks <- case_when(
     # For chi-square tests, use Cohen's convention for chi-square effect sizes
-    str_detect(testType, "X2") ~ c(-0.00001, 0.00001,
-                                   cohen.ES(test="chisq", size="small")$effect.size,
-                                   cohen.ES(test="chisq", size="medium")$effect.size,
-                                   cohen.ES(test="chisq", size="large")$effect.size,
-                                   Inf),
+    str_detect(testType, "X2") ~ c(effectSizeMagnitudes$EffectSizeX2, Inf),
     # For exact tests, use Cohen's convention for proportion tests
-    TRUE ~ c(-0.00001, 0.00001,
-             cohen.ES(test="p", size="small")$effect.size,
-             cohen.ES(test="p", size="medium")$effect.size,
-             cohen.ES(test="p", size="large")$effect.size,
-             Inf)
+    TRUE ~ c(effectSizeMagnitudes$EffectSizeExact, Inf)
   )
 
   # Label the absolute effect size
   effectLabels <- cut(abs(effectSizes),
                       breaks=effectSizeBreaks,
-                      labels=c("NA", "Tiny", "Small", "Medium", "Large"),
+                      labels=effectSizeMagnitudes$EffectSizeMagnitude,
                       right=FALSE) %>%
     sapply(as.character) %>%
     # Convert missing values to string "NA"
@@ -215,10 +235,10 @@ computeChartHeight <- function(autoChartResize, chartHeightInitVal,
          chartHeightInitVal)
 }
 
-###########################################################
-# Functions to run statistical inference tests.
-# Keep these functions separate to avoid slowing execution.
-###########################################################
+#-----------------------------------------------------------#
+# Functions to run statistical inference tests.             #
+# Keep these functions separate to avoid slowing execution. #
+#-----------------------------------------------------------#
 
 # Function for exact binomial test.
 
@@ -239,6 +259,16 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
                                  outsideCounts <- gradeCounts[4:5]
                                  propOutsideSpecGrades <- gradeCounts[6]
                                  
+                                 
+                                 # Identify the smallest magnitude of effect size which the current test could
+                                 # identify given the current group size and alpha + power settings.
+                                 
+                                 minEffectSizeMagnitude <- pwr.p.test(n=sum(thisCounts),
+                                                             power=minPower,
+                                                            sig.level=alpha,
+                                                            alternative="two.sided"
+                                                            )$h
+                                 
                                  # Run test
                                  testResult <- binom.test(x=thisCounts, p=outsideCounts[1]/sum(outsideCounts),
                                                           alternative="two.sided")
@@ -255,31 +285,24 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
                                    # Effect size
                                    effectSize <- ES.h(p1=propSpecGrades, p2=propOutsideSpecGrades)
                                    
-                                   # Achieved power at the given sig level
-                                   achievedPower <- pwr.p.test(h=effectSize,
-                                                               n=sum(thisCounts),
-                                                               sig.level=alpha,
-                                                               alternative="two.sided"
-                                   )$power
+                                   # Only report effect size if it's at least equal to the smallest size
+                                   # that the test could reasonably detect (given current confidence settings).
+                                   
+                                   if(abs(effectSize) < minEffectSizeMagnitude) {
+                                     effectSize <- as.double(NA)
+                                   }
                                    
                                  } else {  # Significance threshold not met
-                                   effectSize <- NA
-                                   achievedPower <- NA
+                                   effectSize <- as.double(NA)
                                  }
                                  
-                                 # If Alpha threshold met, but desired power level not achieved, set effect size to NA
-                                 if (isSig & achievedPower < minPower) { effectSize <- NA }
-                                 
                                  # Add the computed statistics to the given row of data.
-                                 # Add separate columns for tests of raw vs. adjusted counts.
                                  add_column(gradeRow,
                                             `Test Statistic` = testStatistic,
                                             `p-Value` = pValue,
-                                            # Is the result statistically significant?
                                             `Statistical Significance Achieved` = isSig,
                                             `Effect Size` = effectSize,
-                                            # Post-hoc power analysis
-                                            `Achieved Power` = achievedPower
+                                            `Min Detectable Effect Size` = minEffectSizeMagnitude
                                  )
                                }
     
@@ -290,7 +313,7 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
                                   `p-Value` = as.double(NA),
                                   `Statistical Significance Achieved` = FALSE,
                                   `Effect Size` = as.double(NA),
-                                  `Achieved Power` = as.double(NA)
+                                  `Min Detectable Effect Size` = as.double(NA)
     )
   }
   # Return data with test results added
@@ -324,6 +347,15 @@ X2GoodnessofFitTest <- function(gradeSummary, alpha, minPower,
       outsideCounts <- (gradeCounts[3:4] + adjustCellCountsBy)
       propOutsideSpecGrades <- outsideCounts[1]/sum(outsideCounts)
 
+      # Identify the smallest magnitude of effect size which the current test could
+      # identify given the current group size and alpha + power settings.
+      
+      minEffectSizeMagnitude <- pwr.chisq.test(N=sum(thisCounts),
+                                               df=length(thisCounts)-1,
+                                               sig.level=alpha,
+                                               power=minPower
+      )$w
+      
       # Run test
       testResult <- chisq.test(x=thisCounts, p=outsideCounts, rescale.p=TRUE, correct=FALSE)
       
@@ -335,27 +367,24 @@ X2GoodnessofFitTest <- function(gradeSummary, alpha, minPower,
       
       # If statistical significance achieved
       if (isSig) {
-        # Effect size
+        # Estimated effect size
         effectSize <- ES.w1(P0=outsideCounts/sum(outsideCounts), P1=thisCounts/sum(thisCounts))
         
-        # Achieved power at the given sig level
-        achievedPower <- pwr.chisq.test(w=effectSize,
-                                        N=sum(thisCounts),
-                                        df=length(thisCounts)-1,
-                                        sig.level=alpha
-        )$power
+        # Only report effect size if it's at least equal to the smallest size
+        # that the test could reasonably detect (given current confidence settings).
         
-        # Add sign to effect size
-        effectSize <- ifelse(propSpecGrades < propOutsideSpecGrades, -effectSize, effectSize)
+        if(effectSize >= minEffectSizeMagnitude) {
+          # Effect size detectable given settings. Add sign for direction of difference.
+          effectSize <- ifelse(propSpecGrades < propOutsideSpecGrades, -effectSize, effectSize)
+        } else {
+          effectSize <- as.double(NA)
+        }
+        
         
       } else {  # Significance threshold not met
         isSig <- FALSE
         effectSize <- NA
-        achievedPower <- NA
       }
-      
-      # If Alpha threshold met, but desired power level not achieved, set effect size to NA
-      if (isSig & achievedPower < minPower) { effectSize <- NA }
       
       # Add the computed statistics to the given row of data.
       add_column(gradeRow,
@@ -364,8 +393,7 @@ X2GoodnessofFitTest <- function(gradeSummary, alpha, minPower,
                  # Is the result statistically significant?
                  `Statistical Significance Achieved` = isSig,
                  `Effect Size` = effectSize,
-                 # Post-hoc power analysis
-                 `Achieved Power` = achievedPower
+                 `Min Detectable Effect Size` = minEffectSizeMagnitude
       )
       
     }
@@ -376,7 +404,7 @@ X2GoodnessofFitTest <- function(gradeSummary, alpha, minPower,
                                   `p-Value` = as.double(NA),
                                   `Statistical Significance Achieved` = FALSE,
                                   `Effect Size` = as.double(NA),
-                                  `Achieved Power` = as.double(NA)
+                                  `Min Detectable Effect Size` = as.double(NA)
     )
   }
   # Return data with test results added
@@ -411,6 +439,15 @@ X2IndependenceTest <- function(gradeSummary, alpha, minPower,
       # 2x2 contingency table of grades and groups
       gradeCountCT <- matrix(c(thisCounts, outsideCounts), nrow=2, byrow=TRUE)
       
+      # Identify the smallest magnitude of effect size which the current test could
+      # identify given the current group size and alpha + power settings.
+      
+      minEffectSizeMagnitude <- pwr.chisq.test(N=sum(gradeCountCT),
+                                               df=((nrow(gradeCountCT)-1) * (ncol(gradeCountCT)-1)),
+                                               sig.level=alpha,
+                                               power=minPower
+      )$w
+
       # Run test
       testResult <- chisq.test(gradeCountCT)
       
@@ -425,25 +462,20 @@ X2IndependenceTest <- function(gradeSummary, alpha, minPower,
         # Effect size
         effectSize <- ES.w2(gradeCountCT/sum(gradeCountCT))
         
-        # Achieved power at the given sig level
-        achievedPower <- pwr.chisq.test(w=effectSize,
-                                        N=sum(gradeCountCT),
-                                        df=((nrow(gradeCountCT)-1) * (ncol(gradeCountCT)-1)),
-                                        sig.level=alpha
-        )$power
+        # Only report effect size if it's at least equal to the smallest size
+        # that the test could reasonably detect (given current confidence settings).
         
-        # Add sign to effect size
-        effectSize <- ifelse(propSpecGrades < propOutsideSpecGrades, -effectSize, effectSize)
+        if(effectSize >= minEffectSizeMagnitude) {
+          # Effect size detectable given settings. Add sign for direction of difference.
+          effectSize <- ifelse(propSpecGrades < propOutsideSpecGrades, -effectSize, effectSize)
+        } else {
+          effectSize <- as.double(NA)
+        }
         
       } else {  # Significance threshold not met
         isSig <- FALSE
         effectSize <- NA
-        achievedPower <- NA
       }
-      
-      # If Alpha threshold met, but desired power level not achieved, set effect size to NA
-      #if (isSig & (is.na(achievedPower) | achievedPower < minPower)) { effectSize <- NA }
-      if (isSig & achievedPower < minPower) { effectSize <- NA }
       
       # Add the computed statistics to the given row of data.
       add_column(gradeRow,
@@ -452,8 +484,7 @@ X2IndependenceTest <- function(gradeSummary, alpha, minPower,
                  # Is the result statistically significant?
                  `Statistical Significance Achieved` = isSig,
                  `Effect Size` = effectSize,
-                 # Post-hoc power analysis
-                 `Achieved Power` = achievedPower
+                 `Min Detectable Effect Size` = minEffectSizeMagnitude
       )
       
     }
@@ -464,88 +495,7 @@ X2IndependenceTest <- function(gradeSummary, alpha, minPower,
                                   `p-Value` = as.double(NA),
                                   `Statistical Significance Achieved` = FALSE,
                                   `Effect Size` = as.double(NA),
-                                  `Achieved Power` = as.double(NA)
-    )
-  }
-  # Return data with test results added
-  return(gradeAnalysisDF)
-}
-
-# Fisher's exact proportions test.
-# Can use this when data is unbalanced and sample size is small.
-
-FishersExactTest <- function(gradeSummary, alpha, minPower) {
-  
-  # If more than one group to consider, run analysis.
-  if (nrow(gradeSummary) > 1) { 
-    
-    # Run group-level analyses in parallel and combine results into data frame.
-    gradeAnalysisDF <- foreach(gradeRow=iter(gradeSummary, by="row"), .combine=bind_rows, .inorder=TRUE, .packages=c("statmod","tibble","dplyr")) %dopar%
-    {
-      # Get grade counts and proportions for this group and outside groups as vectors.
-      gradeCounts <- as.numeric(select(gradeRow, `Grades of Interest`, `Other Grades`, `Prop Grades of Interest`,
-                                       `Outside Grades of Interest`, `Outside Other Grades`, `Prop Outside Grades of Interest`))
-      thisCounts <- gradeCounts[1:2]
-      propSpecGrades <- gradeCounts[3]
-      outsideCounts <- gradeCounts[4:5]
-      propOutsideSpecGrades <- gradeCounts[6]
-      # 2x2 contingency table of grades and groups
-      gradeCountCT <- matrix(c(thisCounts, outsideCounts), nrow=2, byrow=TRUE)
-      
-      # Run test
-      testResult <- fisher.test(gradeCountCT)
-      
-      # Get test results and sig level
-      testStatistic <- testResult$estimate
-      pValue <- testResult$p.value
-      
-      isSig <- (pValue <= alpha) # Significance threshold met?
-      
-      # If statistical significance achieved
-      if (isSig) {
-        # Effect size
-        effectSize <- ES.w2(gradeCountCT/sum(gradeCountCT))
-        
-        # Achieved power at the given sig level
-        achievedPower <- power.fisher.test(p1=propSpecGrades,
-                                           p2=propOutsideSpecGrades,
-                                           n1=sum(thisCounts),
-                                           n2=sum(outsideCounts),
-                                           alpha=alpha)
-        
-        # Add sign to effect size
-        effectSize <- ifelse(propSpecGrades < propOutsideSpecGrades, -effectSize, effectSize)
-        
-      } else {  # Significance threshold not met
-        isSig <- FALSE
-        effectSize <- NA
-        achievedPower <- NA
-      }
-      
-      # If Alpha threshold met, but desired power level not achieved, set effect size to NA
-      #if (isSig & (is.na(achievedPower) | achievedPower < minPower)) { effectSize <- NA }
-      if (isSig & achievedPower < minPower) { effectSize <- NA }
-      
-      # Add the computed statistics to the given row of data.
-      add_column(gradeRow,
-                 `Test Statistic` = testStatistic,
-                 `p-Value` = pValue,
-                 # Is the result statistically significant?
-                 `Statistical Significance Achieved` = isSig,
-                 `Effect Size` = effectSize,
-                 # Post-hoc power analysis
-                 `Achieved Power` = achievedPower
-      )
-      
-    }
-    # Insufficient number of groups to run analysis.
-  } else {
-    gradeAnalysisDF <- add_column(gradeSummary,
-                                  `Test Statistic` = as.double(NA),
-                                  `p-Value` = as.double(NA),
-                                  `Statistical Significance Achieved` = FALSE,
-                                  `Effect Size` = as.double(NA),
-                                  `Achieved Power` = as.double(NA)
+                                  `Min Detectable Effect Size` = as.double(NA)
     )
   }
   # Return data with test results added
@@ -555,6 +505,11 @@ FishersExactTest <- function(gradeSummary, alpha, minPower) {
 # Generate list of LOVs for filter fields.
 
 filterLOVList <- populateLOVs(CrsGrades, filterFields, filterInitVals)
+
+#-----------#
+# Shiny App #
+#-----------#
+
 
 # Page layout and controls
 
@@ -596,18 +551,12 @@ ui <- fixedPage(
       } strong {
          margin-bottom: 10px;
       } label {
-         font-weight: 500; font-style: italic;
+         font-weight: 500;
+         font-style: italic;
       } .form-group, .selectize-control, .checkbox {
          margin-bottom: 4px;
-      } .box-body {
+      }.box-body {
          padding-bottom: 4px;
-      } .confidence-hr {
-        border-width: 1px;
-        border-color: #cccccc;
-        margin: 8px;
-      } .tooltip, .popover
-      {
-         pointer-events: none;
       }"
     ))
   ),
@@ -654,15 +603,14 @@ ui <- fixedPage(
       ),
       inputPanel(
         verticalLayout(
-          strong("Choose Desired Confidence"),
+          strong("Choose Confidence Settings"),
+          # Minimum desired power
+          sliderInput(inputId="MinPower", label="Min Chance of Difference Detection",
+                      min=50, max=100, value=90, step=1, post="%"),
           # Alpha threshold
           sliderInput(inputId="Alpha", label="Max Chance of False Positive",
                       min=0.1, max=20, value=5, step=0.1, post="%"),
-          checkboxInput(inputId="AlphaAdjust", label="Adjust False Positive Test by Number of Groups", value=TRUE),
-          hr(class="confidence-hr"),
-          # Minimum achieved power
-          sliderInput(inputId="MinPower", label="Min Chance of Accurately-Estimated Difference Size",
-                      min=50, max=100, value=80, step=1, post="%")
+          checkboxInput(inputId="AlphaAdjust", label="Adjust False Positive Test by Number of Groups", value=TRUE)
         )
       ),
       width=3
@@ -722,7 +670,7 @@ server <- function (input, output){
     names(filterVals) <- filterFields
     # Get grades of interest
     gradeVals <- input$Grades
-    # Get specified Alpha, Alpha adjustment, and min achieved power.
+    # Get specified Alpha, Alpha adjustment, min desired effect size, and min a-priori power.
     alpha <- input$Alpha/100
     alphaAdjust <- input$AlphaAdjust
     minPower <- input$MinPower/100
@@ -800,7 +748,7 @@ server <- function (input, output){
                                     `p-Value` = as.double(NA),
                                     `Statistical Significance Achieved` = FALSE,
                                     `Effect Size` = as.double(NA),
-                                    `Achieved Power` = as.double(NA))
+                                    `Min Detectable Effect Size` = as.double(NA))
       # Otherwise run appropriate inferential test on each row of data, and return data + results.
     } else if (testType=="Binomial Exact") {
       gradeAnalysisDF <- BinomialExactTest(gradeSummary, alpha, minPower)
@@ -809,9 +757,9 @@ server <- function (input, output){
     } else if (testType=="X2 Independence") {
       gradeAnalysisDF <- X2IndependenceTest(gradeSummary, alpha, minPower)
     }
-    else if (testType=="Fisher's Exact") {
-      gradeAnalysisDF <- FishersExactTest(gradeSummary, alpha, minPower)
-    }
+    # else if (testType=="Fisher's Exact") {
+    #   gradeAnalysisDF <- FishersExactTest(gradeSummary, alpha, minPower)
+    # }
 
     # Label effect sizes and assign colors for plotting.
     gradeAnalysisDF %<>%
@@ -834,7 +782,7 @@ server <- function (input, output){
                                  "Effect Size",
                                  "Effect Size Magnitude",
                                  "EffectSizeColor",
-                                 "Achieved Power"))
+                                 "Min Detectable Effect Size"))
     
     
   })
