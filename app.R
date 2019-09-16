@@ -56,8 +56,8 @@ allValChoice <- "(all)" # "All values" choice for each filter
 filterInitVals <- c("2018", "Fall", "Chemistry", allValChoice)
 names(filterInitVals) <- filterFields
 
-# Test type choices: Binomial Exact, Fisher's Exact, X2 Goodness of Fit, X2 Independence, or Auto
-testTypes <- c("Auto", "Binomial Exact", "Fisher's Exact", "X2 Goodness of Fit", "X2 Independence")
+# Test type choices: Binomial Exact, X2 Goodness of Fit, X2 Independence, or Auto
+testTypes <- c("Auto", "Binomial Exact", "X2 Goodness of Fit", "X2 Independence")
 testTypeInitVal = "Binomial Exact"
 testType <- testTypeInitVal  # Placeholder for "Test Type" user input
 
@@ -258,6 +258,8 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
                                  propSpecGrades <- gradeCounts[3]
                                  outsideCounts <- gradeCounts[4:5]
                                  propOutsideSpecGrades <- gradeCounts[6]
+                                 # Null hypothesis: proportion of specified grades in outside groups.
+                                 H0Prop <- outsideCounts[1]/sum(outsideCounts)
                                  
                                  
                                  # Identify the smallest magnitude of effect size which the current test could
@@ -270,12 +272,12 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
                                                             )$h
                                  
                                  # Run test
-                                 testResult <- binom.test(x=thisCounts, p=outsideCounts[1]/sum(outsideCounts),
-                                                          alternative="two.sided")
+                                 testResult <- binom.test(x=thisCounts, p=H0Prop, alternative="two.sided")
                                  
                                  # Get test results and sig level
                                  testStatistic <- testResult$statistic
                                  pValue <- as.numeric(testResult$p.value)
+                                 confInt <- testResult$conf.int
                                  
                                  isSig <- (pValue <= alpha) # Significance threshold met?
                                  
@@ -300,6 +302,8 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
                                  add_column(gradeRow,
                                             `Test Statistic` = testStatistic,
                                             `p-Value` = pValue,
+                                            `Diff CI Lower Bound` = confInt[1] - propOutsideSpecGrades,
+                                            `Diff CI Upper Bound` = confInt[2] - propOutsideSpecGrades,
                                             `Statistical Significance Achieved` = isSig,
                                             `Effect Size` = effectSize,
                                             `Min Detectable Effect Size` = minEffectSizeMagnitude
@@ -311,6 +315,8 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
     gradeAnalysisDF <- add_column(gradeSummary,
                                   `Test Statistic` = as.double(NA),
                                   `p-Value` = as.double(NA),
+                                  `Diff CI Lower Bound` = as.double(NA),
+                                  `Diff CI Upper Bound` = as.double(NA),
                                   `Statistical Significance Achieved` = FALSE,
                                   `Effect Size` = as.double(NA),
                                   `Min Detectable Effect Size` = as.double(NA)
@@ -605,7 +611,7 @@ ui <- fixedPage(
         verticalLayout(
           strong("Choose Confidence Settings"),
           # Minimum desired power
-          sliderInput(inputId="MinPower", label="Min Chance of Difference Detection",
+          sliderInput(inputId="MinPower", label="Min Chance of Detecting Diff",
                       min=50, max=100, value=90, step=1, post="%"),
           # Alpha threshold
           sliderInput(inputId="Alpha", label="Max Chance of False Positive",
@@ -617,9 +623,13 @@ ui <- fixedPage(
     ),
     mainPanel(
       tabsetPanel(
-        tabPanel("Bar Plot",
+        tabPanel("Grades",
                  div(style='height:750px; width:750; overflow-y: scroll',
-                     ggvisOutput(plot_id="outGGVisPlot"))
+                     ggvisOutput(plot_id="outGradePlot"))
+        ),
+        tabPanel("Differences",
+                 div(style='height:750px; width:750; overflow-y: scroll',
+                     ggvisOutput(plot_id="outCIPlot"))
         ),
         tabPanel("Table", tableOutput(outputId="outTable"))
       )
@@ -647,12 +657,23 @@ server <- function (input, output){
     filterVals
   })
   
-  # Reactives: titles and subtitles for chart and x-axis
-  xAxisTitle <- reactive({
+  # Reactive: confidence level (given value of Alpha)
+  confLevel <- reactive({
+    paste0((100 - input$Alpha), "%", collapse="")
+  })
+  
+  # Reactives: titles and subtitles for charts and x-axes
+  gradePlotXAxisTitle <- reactive({
     paste("Percentage of", paste0(input$Grades, collapse="/"), "Grades", sep=" ", collapse="")
   })
-  mainTitle <- reactive({
-    paste(xAxisTitle(), "by", input$Grouping, sep=" ", collapse="")
+  mainGradePlotTitle <- reactive({
+    paste(gradePlotXAxisTitle(), "by", input$Grouping, sep=" ", collapse="")
+  })
+  CIPlotXAxisTitle <- reactive({
+    paste("Difference in", paste0(input$Grades, collapse="/"), "Grades from Others", sep=" ", collapse="")
+  })
+  mainCIPlotTitle <- reactive({
+    paste0(str_sub(CIPlotXAxisTitle(), 1, -2), " ", input$Grouping, "s", sep=" ", collapse="")
   })
   subTitle <- reactive({
     paste(paste0(names(filterVals()),":"), filterVals(), sep=" ", collapse="; ")
@@ -757,9 +778,6 @@ server <- function (input, output){
     } else if (testType=="X2 Independence") {
       gradeAnalysisDF <- X2IndependenceTest(gradeSummary, alpha, minPower)
     }
-    # else if (testType=="Fisher's Exact") {
-    #   gradeAnalysisDF <- FishersExactTest(gradeSummary, alpha, minPower)
-    # }
 
     # Label effect sizes and assign colors for plotting.
     gradeAnalysisDF %<>%
@@ -778,6 +796,8 @@ server <- function (input, output){
                                  "Prop Outside Grades of Interest",
                                  "Test Statistic",
                                  "p-Value",
+                                 "Diff CI Lower Bound",
+                                 "Diff CI Upper Bound",
                                  "Statistical Significance Achieved",
                                  "Effect Size",
                                  "Effect Size Magnitude",
@@ -798,8 +818,8 @@ server <- function (input, output){
     return(max(nchar(gradeAnalysisDF()[1])))
   })
   
-  # Generate GGVis plot.
-  ggVisPlot <- reactive({
+  # Generate GGVis grade plot.
+  gradePlot <- reactive({
     
     # Generate symbols for chart items for use in GGVis' formula-type interface.
     xVar <- prop("x2", as.symbol("Prop Grades of Interest"))
@@ -817,9 +837,9 @@ server <- function (input, output){
                properties = axis_props(
                  labels = list(fontSize=12)
                )) %>%
-      add_axis("x", format=".0%", title=xAxisTitle(), grid=FALSE) %>%
+      add_axis("x", format=".0%", title=gradePlotXAxisTitle(), grid=FALSE) %>%
       # A hack to show a plot title
-      add_axis("x", orient = "top", ticks = 0, title=mainTitle(),
+      add_axis("x", orient = "top", ticks = 0, title=mainGradePlotTitle(),
                properties = axis_props(
                  axis = list(stroke="white"),
                  labels = list(fontSize=0),
@@ -859,11 +879,77 @@ server <- function (input, output){
                                             numGroups(), pixelsPerBar, pixelsHeaderFooter,
                                             minChartHeight),
                   width="auto")
-    #set_options(height=input$PlotHeight, width=575)
-    #set_options(height=750, width=600)
   })
   
-  ggVisPlot %>% bind_shiny("outGGVisPlot")
+  # Generate GGVis confidence-interval plot.
+  CIPlot <- reactive({
+    
+    # Generate symbols for chart items for use in GGVis' formula-type interface.
+    x1Var <- prop("x", as.symbol("Diff CI Lower Bound"))
+    x2Var <- prop("x2", as.symbol("Diff CI Upper Bound"))
+    yVar <- prop("y", as.symbol(groupVal()))
+    fillVar <- prop("fill", as.symbol("Effect Size Magnitude"))
+    
+    # Generate plot and tooltip function
+    gradeAnalysisDF() %>%
+      ggvis() %>%
+      layer_rects(x=x1Var, x2=x2Var, y=yVar, height=band(), fill=fillVar) %>%
+      add_axis("y", title="", grid=TRUE, tick_size_major=0, tick_padding=5,
+               properties = axis_props(
+                 labels = list(fontSize=12)
+               )) %>%
+      add_axis("x", format=".0%", title=CIPlotXAxisTitle(), grid=FALSE) %>%
+      # A hack to show a plot title
+      add_axis("x", orient = "top", ticks = 0, title=mainCIPlotTitle(),
+               properties = axis_props(
+                 axis = list(stroke="white"),
+                 labels = list(fontSize=0),
+                 title = list(fontSize=14),
+                 grid = list(x=scaled_value("x", 0), stroke="black"))) %>%
+      add_legend("fill", title="Difference From Others",
+                 values=effectSizeLblsColors$EffectSizeLabel,
+                 properties = legend_props(
+                   title = list(fontSize=12),
+                   labels = list(fontSize=12)
+                 )) %>%
+      scale_ordinal("fill", domain=effectSizeLblsColors$EffectSizeLabel,
+                    range=effectSizeLblsColors$EffectSizeColor) %>%
+      # Function for interactive tooltips
+      add_tooltip(
+        function(g) {
+          if (is.null(g)) return(NULL)
+          # To handle intermittent error when data frame does not contain grouping column
+          if (! groupVal() %in% colnames(g)) return(NULL)
+          if (is.null(g[, groupVal()])) return(NULL)
+          curGroupVal <- as.character(g[1, groupVal()])
+          curRec <- filter_at(gradeAnalysisDF(), groupVal(), all_vars(. == curGroupVal))
+          paste(
+            paste0(groupVal(), ": ", "<b>", curGroupVal, "</b>", collapse=""),
+            paste0("Number of ", paste0(input$Grades, collapse="/"), " Grades: ",
+                   "<b>", as.character(curRec$`Grades of Interest`), "</b>",
+                   sep=" ", collapse=""),
+            paste0("Percentage of ", paste0(input$Grades, collapse="/"), " Grades: ",
+                   "<b>", percent(curRec$`Prop Grades of Interest`), "</b>",
+                   sep=" ", collapse=""),
+            paste0("Difference from Other ", groupVal(), "s: ",
+                   "<b>", curRec$`Effect Size Magnitude`, "</b>",
+                   sep=" ", collapse=""),
+            paste0("Difference Range with ", confLevel(), " Confidence: ", 
+                   "<b>", as.character(round(curRec$`Diff CI Lower Bound` * 100, digits=1)), "% to ",
+                   as.character(round(curRec$`Diff CI Upper Bound` * 100, digits=1)), "%", "</b>",
+                   sep=" ", collapse=""),
+            sep="<br />"
+          )
+        }, on="hover") %>%
+      set_options(height=computeChartHeight(autoChartResize, chartHeightInitVal,
+                                            numGroups(), pixelsPerBar, pixelsHeaderFooter,
+                                            minChartHeight),
+                  width="auto")
+  })
+
+  # Render plots
+  gradePlot %>% bind_shiny("outGradePlot")
+  CIPlot %>% bind_shiny("outCIPlot")
   
   # Render table.
   output$outTable <- renderTable({
