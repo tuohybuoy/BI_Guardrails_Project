@@ -164,7 +164,7 @@ gradeInitVals <- grades[1:2]
 # This makes sure to populate LOVs with only relevant values,
 # and to handle things when filter defaults return zero rows.
 
-# U R HERE. Handle the case when one or fewer filters is set to specific value.
+# Need to handle the case when one or fewer filters is set to specific value.
 
 populateLOVs <- function(inDF, filterFields, filterValues) {
   
@@ -333,6 +333,8 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
 # Works best when the combined size of other groups is much larger than
 # the size of the group of interest.
 
+# U R HERE. Check if it's possible to compute confidence intervals from Chi-Square test.
+
 X2GoodnessofFitTest <- function(gradeSummary, alpha, minPower,
                                 # Value to add to each cell in chi-square test.
                                 # Useful for making test results less extreme when
@@ -422,6 +424,8 @@ X2GoodnessofFitTest <- function(gradeSummary, alpha, minPower,
 # against all other groups combined, in a 2x2 contigency table.
 # Works best when combined other groups are not much larger than
 # the group of interest.
+
+# U R HERE. Check if it's possible to compute confidence intervals from Chi-Square test.
 
 X2IndependenceTest <- function(gradeSummary, alpha, minPower,
                                # Value to add to each cell in chi-square test.
@@ -627,19 +631,10 @@ ui <- fixedPage(
                  div(style='height:750px; width:750; overflow-y: scroll',
                      ggvisOutput(plot_id="outGradePlot"))
         ),
-        tabPanel("Differences",
-                 div(style='height:750px; width:750; overflow-y: scroll',
-                     ggvisOutput(plot_id="outCIPlot"))
-        ),
         tabPanel("Table", tableOutput(outputId="outTable"))
       )
     )
-  ) #,
-  # wellPanel(fluidRow(
-  #   column(width=4, a(href=repoLink, "Project repository and documentation")),
-  #   column(width=4, a(href=datasetLink, "The UIUC GPA Dataset")),
-  #   column(width=4, a(href=uiucCoursesLink, "UIUC Course Explorer"))
-  # ))
+  )
 )
 
 # Page business logic and output
@@ -872,68 +867,6 @@ server <- function (input, output){
             paste0("Difference from Other ", groupVal(), "s: ",
                    "<b>", curRec$`Effect Size Magnitude`, "</b>",
                    sep=" ", collapse=""),
-            sep="<br />"
-          )
-        }, on="hover") %>%
-      set_options(height=computeChartHeight(autoChartResize, chartHeightInitVal,
-                                            numGroups(), pixelsPerBar, pixelsHeaderFooter,
-                                            minChartHeight),
-                  width="auto")
-  })
-  
-  # Generate GGVis confidence-interval plot.
-  CIPlot <- reactive({
-    
-    # Generate symbols for chart items for use in GGVis' formula-type interface.
-    x1Var <- prop("x", as.symbol("Diff CI Lower Bound"))
-    x2Var <- prop("x2", as.symbol("Diff CI Upper Bound"))
-    yVar <- prop("y", as.symbol(groupVal()))
-    fillVar <- prop("fill", as.symbol("Effect Size Magnitude"))
-    
-    # Generate plot and tooltip function
-    gradeAnalysisDF() %>%
-      ggvis() %>%
-      layer_rects(x=x1Var, x2=x2Var, y=yVar, height=band(), fill=fillVar) %>%
-      add_axis("y", title="", grid=TRUE, tick_size_major=0, tick_padding=5,
-               properties = axis_props(
-                 labels = list(fontSize=12)
-               )) %>%
-      add_axis("x", format=".0%", title=CIPlotXAxisTitle(), grid=FALSE) %>%
-      # A hack to show a plot title
-      add_axis("x", orient = "top", ticks = 0, title=mainCIPlotTitle(),
-               properties = axis_props(
-                 axis = list(stroke="white"),
-                 labels = list(fontSize=0),
-                 title = list(fontSize=14),
-                 grid = list(x=scaled_value("x", 0), stroke="black"))) %>%
-      add_legend("fill", title="Difference From Others",
-                 values=effectSizeLblsColors$EffectSizeLabel,
-                 properties = legend_props(
-                   title = list(fontSize=12),
-                   labels = list(fontSize=12)
-                 )) %>%
-      scale_ordinal("fill", domain=effectSizeLblsColors$EffectSizeLabel,
-                    range=effectSizeLblsColors$EffectSizeColor) %>%
-      # Function for interactive tooltips
-      add_tooltip(
-        function(g) {
-          if (is.null(g)) return(NULL)
-          # To handle intermittent error when data frame does not contain grouping column
-          if (! groupVal() %in% colnames(g)) return(NULL)
-          if (is.null(g[, groupVal()])) return(NULL)
-          curGroupVal <- as.character(g[1, groupVal()])
-          curRec <- filter_at(gradeAnalysisDF(), groupVal(), all_vars(. == curGroupVal))
-          paste(
-            paste0(groupVal(), ": ", "<b>", curGroupVal, "</b>", collapse=""),
-            paste0("Number of ", paste0(input$Grades, collapse="/"), " Grades: ",
-                   "<b>", as.character(curRec$`Grades of Interest`), "</b>",
-                   sep=" ", collapse=""),
-            paste0("Percentage of ", paste0(input$Grades, collapse="/"), " Grades: ",
-                   "<b>", percent(curRec$`Prop Grades of Interest`), "</b>",
-                   sep=" ", collapse=""),
-            paste0("Difference from Other ", groupVal(), "s: ",
-                   "<b>", curRec$`Effect Size Magnitude`, "</b>",
-                   sep=" ", collapse=""),
             paste0("Difference Range with ", confLevel(), " Confidence: ", 
                    "<b>", as.character(round(curRec$`Diff CI Lower Bound` * 100, digits=1)), "% to ",
                    as.character(round(curRec$`Diff CI Upper Bound` * 100, digits=1)), "%", "</b>",
@@ -946,11 +879,10 @@ server <- function (input, output){
                                             minChartHeight),
                   width="auto")
   })
-
-  # Render plots
-  gradePlot %>% bind_shiny("outGradePlot")
-  CIPlot %>% bind_shiny("outCIPlot")
   
+  # Render plot
+  gradePlot %>% bind_shiny("outGradePlot")
+
   # Render table.
   output$outTable <- renderTable({
     select(gradeAnalysisDF(), -EffectSizeColor)
