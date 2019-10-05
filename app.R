@@ -272,7 +272,7 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
                                                             )$h
                                  
                                  # Run test
-                                 testResult <- binom.test(x=thisCounts, p=H0Prop, alternative="two.sided")
+                                 testResult <- binom.test(x=thisCounts, p=H0Prop, alternative="two.sided", conf.level=(1.0-alpha))
                                  
                                  # Get test results and sig level
                                  testStatistic <- testResult$statistic
@@ -867,9 +867,17 @@ server <- function (input, output){
             paste0("Difference from Other ", groupVal(), "s: ",
                    "<b>", curRec$`Effect Size Magnitude`, "</b>",
                    sep=" ", collapse=""),
-            paste0("Difference Range with ", confLevel(), " Confidence: ", 
-                   "<b>", as.character(round(curRec$`Diff CI Lower Bound` * 100, digits=1)), "% to ",
-                   as.character(round(curRec$`Diff CI Upper Bound` * 100, digits=1)), "%", "</b>",
+            paste0("Difference Range: ", 
+                   "<b>", as.character(abs(round(ifelse(curRec$`Diff CI Lower Bound` < 0 & curRec$`Diff CI Upper Bound` <= 0,
+                                                        curRec$`Diff CI Upper Bound`,
+                                                        curRec$`Diff CI Lower Bound`)  * 100, digits=1))), "% ",
+                   ifelse(curRec$`Diff CI Lower Bound` < 0 & curRec$`Diff CI Upper Bound` > 0, "Lower", ""),
+                   " to ",
+                   as.character(abs(round(ifelse(curRec$`Diff CI Lower Bound` < 0 & curRec$`Diff CI Upper Bound` <= 0,
+                                                 curRec$`Diff CI Lower Bound`,
+                                                 curRec$`Diff CI Upper Bound`) * 100, digits=1))), "% ", 
+                   ifelse(curRec$`Diff CI Upper Bound` <= 0, "Lower", "Higher"),
+                   "</b>",
                    sep=" ", collapse=""),
             sep="<br />"
           )
