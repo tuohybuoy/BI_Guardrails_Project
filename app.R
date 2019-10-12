@@ -53,7 +53,7 @@ groupInitField <- "Course"
 # Define filter fields and initial values for each
 filterFields <- c("Year", "Term", "Subject", "Level")
 allValChoice <- "(all)" # "All values" choice for each filter
-filterInitVals <- c("2018", "Fall", "Chemistry", allValChoice)
+filterInitVals <- c("2019", "Spring", "Chemistry", allValChoice)
 names(filterInitVals) <- filterFields
 
 # Test type choices: Binomial Exact, X2 Goodness of Fit, X2 Independence, or Auto
