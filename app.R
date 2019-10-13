@@ -53,7 +53,7 @@ groupInitField <- "Course"
 # Define filter fields and initial values for each
 filterFields <- c("Year", "Term", "Subject", "Level")
 allValChoice <- "(all)" # "All values" choice for each filter
-filterInitVals <- c("2019", "Spring", "Chemistry", allValChoice)
+filterInitVals <- c("2018", "Fall", "Chemistry", allValChoice)
 names(filterInitVals) <- filterFields
 
 # Test type choices: Binomial Exact, X2 Goodness of Fit, X2 Independence, or Auto
@@ -159,40 +159,16 @@ getGradeColNames <- function(crsGradeDF, gradeVect) {
 grades <- getGradeColNames(CrsGrades, GradeQualPts$Grade)
 gradeInitVals <- grades[1:2]
 
-# Function to repopulate LOVs for each filter field,
-# depending on current grouping and filter defaults.
-# This makes sure to populate LOVs with only relevant values,
-# and to handle things when filter defaults return zero rows.
-
-# Need to handle the case when one or fewer filters is set to specific value.
+# Function to populate LOVs with full lists of values available.
+# Returrn list of filter fields and values.
+# This logic is a quick fix until reactive LOVs are working.
 
 populateLOVs <- function(inDF, filterFields, filterValues) {
-  
-  # Construct list. Each element corresponds to a single filter field, and the element values
-  # show the other filter fields and their current settings.
-  # Will use this to get the LOV for each filter field given the current settings of all
-  # other filters.
-  
-  otherFilterList <- foreach(curField=filterFields, .combine=bind_rows, .inorder=FALSE) %do% {
-    data.frame(otherField = filterFields,
-               # Filter settings, replacing "(all)" string with NA
-               otherValue = na_if(replace(filterInitVals, which(filterFields == curField), NA), allValChoice),
-               stringsAsFactors=FALSE) %>%
-      spread(otherField, otherValue) %>%
-      bind_cols(filterField=curField)
-  } %>%
-    split(f=.$filterField)
-  
-  # For each filter field, filter the input data given all other filter settings
-  # and construct the LOV from the results.
-  
-  foreach(curField=filterFields, .combine=rbind, .inorder=FALSE) %do% {
-    # Join input data to values of "other" filter fields
-    select(otherFilterList[[curField]], -filterField) %>%
-      select_if(isNotNA) %>%
-      inner_join(inDF) %>%
-      # Select any remaining values for the current field and uniquefy
-      select_at(curField, renameFilterFieldValCol) %>%
+
+    foreach(curField=filterFields, .combine=rbind, .inorder=FALSE) %do% {
+
+      # Select values for the current field and uniquefy
+      select_at(inDF, curField, renameFilterFieldValCol) %>%
       distinct() %>%
       # Add "(all)" choice to each filter
       bind_rows(data.frame(filterValue = allValChoice, stringsAsFactors=FALSE)) %>%
@@ -205,19 +181,65 @@ populateLOVs <- function(inDF, filterFields, filterValues) {
   
 }
 
+# Function to dynamically repopulate LOVs for each filter field,
+# depending on current grouping and filter defaults.
+# This makes sure to populate LOVs with only relevant values,
+# and to handle things when filter defaults return zero rows.
+
+# Need to handle the case when one or fewer filters is set to specific value.
+
+# populateLOVs <- function(inDF, filterFields, filterValues) {
+#   
+#   # Construct list. Each element corresponds to a single filter field, and the element values
+#   # show the other filter fields and their current settings.
+#   # Will use this to get the LOV for each filter field given the current settings of all
+#   # other filters.
+#   
+#   otherFilterList <- foreach(curField=filterFields, .combine=bind_rows, .inorder=FALSE) %do% {
+#     data.frame(otherField = filterFields,
+#                # Filter settings, replacing "(all)" string with NA
+#                otherValue = na_if(replace(filterInitVals, which(filterFields == curField), NA), allValChoice),
+#                stringsAsFactors=FALSE) %>%
+#       spread(otherField, otherValue) %>%
+#       bind_cols(filterField=curField)
+#   } %>%
+#     split(f=.$filterField)
+#   
+#   # For each filter field, filter the input data given all other filter settings
+#   # and construct the LOV from the results.
+#   
+#   foreach(curField=filterFields, .combine=rbind, .inorder=FALSE) %do% {
+#     # Join input data to values of "other" filter fields
+#     select(otherFilterList[[curField]], -filterField) %>%
+#       select_if(isNotNA) %>%
+#       inner_join(inDF) %>%
+#       # Select any remaining values for the current field and uniquefy
+#       select_at(curField, renameFilterFieldValCol) %>%
+#       distinct() %>%
+#       # Add "(all)" choice to each filter
+#       bind_rows(data.frame(filterValue = allValChoice, stringsAsFactors=FALSE)) %>%
+#       mutate(filterField = curField,
+#              valueOrder = ifelse(filterValue==allValChoice, " ", filterValue)) %>%
+#       arrange(valueOrder) %>%
+#       select(-valueOrder)
+#   } %>%
+#     split(f=.$filterField)
+#   
+# }
+
 # Function to adjust filter values depending on the current LOV list for each filter.
 # If a filter setting is not in its current LOV, replace the setting with "(all)".
 
-adjustFilterValues <- function(filterLOVList, filterFields, filterValues) {
-
-  filterNewVals <- foreach(curField=filterFields, .combine=c, .inorder=TRUE) %do% {
-    ifelse(filterValues[names(filterValues)==curField] %in% filterLOVList[[curField]]$filterValue,
-           filterValues[names(filterValues)==curField],
-           allValChoice)
-  }
-  names(filterNewVals) <- filterFields
-  filterNewVals
-}
+# adjustFilterValues <- function(filterLOVList, filterFields, filterValues) {
+# 
+#   filterNewVals <- foreach(curField=filterFields, .combine=c, .inorder=TRUE) %do% {
+#     ifelse(filterValues[names(filterValues)==curField] %in% filterLOVList[[curField]]$filterValue,
+#            filterValues[names(filterValues)==curField],
+#            allValChoice)
+#   }
+#   names(filterNewVals) <- filterFields
+#   filterNewVals
+# }
 
 # If needed, make the alpha threshold more strict according to the number
 # of tests performed.

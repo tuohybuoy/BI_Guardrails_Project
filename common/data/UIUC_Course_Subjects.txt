@@ -1,764 +1,184 @@
 Subject	Subject Description
-CRS_SUBJ_CD	CRS_SUBJ_DESC
-A&A	ZZZ Architecture and Art
-AAE	ZZZ Aeronaut & Astronaut Eng
 AAS	Asian American Studies
-AAS	African-American Studies
-AAST	African American Studies
-ABE	Agric & Biological Engineering
-ABIO	ZZZ Animal Biology
-ACC	Accountancy
+ABE	Agricultural and Biological Engineering
 ACCY	Accountancy
-ACE	Agr & Consumer Economics
-ACES	Agr, Consumer, & Env Sciences
-ACTG	Accounting
-AD	ZZZ Art and Design
-ADB	ZZZ Business Administration
-ADE	ZZZ Educational Administration
-ADG	ZZZ Administration
-ADH	ZZZ Health Svcs Administration
-ADP	ZZZ Public Administration
+ACE	Agricultural and Consumer Economics
+ACES	Agricultural, Consumer and Environmental Sciences
 ADV	Advertising
 AE	Aerospace Engineering
 AFAS	Air Force Aerospace Studies
-AFLG	ZZZ African Languages
 AFRO	African American Studies
 AFST	African Studies
 AGCM	Agricultural Communications
-AGE	ZZZ Agricultural Engineering
-AGEC	ZZZ Agricultural Economics
 AGED	Agricultural Education
-AGM	ZZZ Agricultural Mechanics
-AGR	ZZZ Agriculture
-AGRN	ZZZ Agronomy
-AH	Art History
-AH	ZZZ Animal Husbandry
-AHCE	ZZZ Admin Higher Continuing Ed
-AHS	Applied Health Sciences
-AHS	Applied Health Sci Courses
+AHS	Applied Health Sciences Courses
 AIS	American Indian Studies
-ALEC	Ag Ldrship, Educ & Comm
-ALS	ZZZ Applied Life Studies Crses
-AM	ZZZ Associated Medical Sci
-AM	ZZZ Art - Medical
-AMCV	ZZZ American Civilization
-AN	ZZZ Anatomy & Cell Biology
-AN	ZZZ Animal Nutrition
-ANA	ZZZ Nurse Anesthesia
-ANAT	Anatomy and Cell Biology
-ANAT	ZZZ Anatomical Sciences
-ANES	ZZZ Anesthesiology
-ANS	ZZZ Animal Science
 ANSC	Animal Sciences
 ANTH	Anthropology
-ANTH	Anthropology
-ARAB	Arabic
 ARAB	Arabic
 ARCH	Architecture
-ARCH	Architecture
-ARCR	ZZZ Art--Crafts
-ARD	ZZZ Art-Intro to Art & Design
-ARGD	ZZZ Art--Graphic Design
-ARID	ZZZ Art--Industrial Design
-ARNM	ZZZ Art--Narrative Media
-ARPA	ZZZ Art--Painting
-ARPH	ZZZ Art--Photography
-ARPR	ZZZ Art--Printmaking
-ARSC	ZZZ Art--Sculpture
-ARST	Archaeological Studies
 ART	Art
-ART	Art
-ART	Visual Arts
-ARTC	ZZZ Art--Cinematography
 ARTD	Art--Design
 ARTE	Art--Education
 ARTF	Art--Foundation
 ARTH	Art--History
 ARTS	Art--Studio
-AS	ZZZ Aerospace Science
-ASAM	ZZZ Asian American Studies
-ASP	Astronomy-Physics
-ASP	Academic Skills Program
-ASRM	Actuarial Science & Risk Mgmt
-ASST	ZZZ Asian Studies
+ASRM	Actuarial Science and Risk Management
 ASST	Asian Studies
-AST	ZZZ Applied Study Term
 ASTR	Astronomy
-ATH	Athletic Training
 ATMS	Atmospheric Sciences
-AVI	ZZZ Aviation
-BA	Business Administration
-BA	ZZZ Biocommunication Arts
-BACT	ZZZ Bacteriology
 BADM	Business Administration
-BADM	ZZZ Business Administration
-BALT	ZZZ Baltic Languages and Cult
-BAND	ZZZ Bands
-BASC	ZZZ Basic Sciences
-BASQ	Basque
-BC	ZZZ Biological Chemistry
-BCHE	ZZZ-Biochemistry
-BCMG	Biochem & Molecular Genetics
-BCOG	Brain and Cognitive Science
 BCS	Bosnian-Croatian-Serbian
-BED	ZZZ Business Education
-BHIS	Biomedical &Hlth Info Sciences
-BIO	Biology
 BIOC	Biochemistry
 BIOE	Bioengineering
-BIOE	Bioengineering
 BIOL	Biology
-BIOM	ZZZ Biometry
 BIOP	Biophysics
-BIOS	Biological Sciences
-BISC	ZZZ Biomedical Science
-BLAW	ZZZ Business Law
-BLST	Black Studies
-BMNA	Bamana
-BMS	Basic Medical Sciences
-BOO	ZZZ Business Orgzn and Opers
-BOT	ZZZ Botany
-BPS	Biopharmaceutical Sciences
-BPS	Biopharmaceutical Sciences
-BR	Bridge
-BSE	Biomedical Sciences & Engr
-BSTT	Biostatistics
+BSE	Biomedical Sciences and Engineering
 BTW	Business and Technical Writing
-BULG	Bulgarian
-BUS	Business Administration
 BUS	Business
-BVIS	Biomedical Visualization
-CAM	ZZZ Community Arts Management
-CAP	Capital Scholars Courses
-CAS	Center for Advanced Study
-CATH	ZZZ Roman Catholic
 CATL	Catalan
 CB	Comparative Biosciences
-CC	Campus Courses
-CCJ	Criminology & Criminal Justice
-CD	City Design
 CDB	Cell and Developmental Biology
-CE	ZZZ Civil Engineering
-CED	ZZZ Medical Education
-CEE	Civil and Environ Engineering
-CEES	Central &East European Studies
-CELE	Clerkship Electives-Chicago
-CEMM	ZZZ Civil Engr, Mechan &Metall
-CERE	ZZZ Ceramic Engineering
-CFC	ZZZ Child, Family and Comm Svc
-CHBE	Chemical and Biomolecular Engr
-CHE	Chemistry
-CHE	ZZZ Chemical Engineering
-CHE	Chemical Engineering
+CEE	Civil and Environmental Engineering
+CHBE	Chemical and Biomolecular Engineering
 CHEM	Chemistry
-CHEM	Chemistry
-CHIN	Chinese
 CHIN	Chinese
 CHLH	Community Health
-CHP	Campus Honors Program
-CHSC	Community Health Sciences
-CI	Curriculum and Instruction
+CHP	Campus Honors Program Courses
 CI	Curriculum and Instruction
 CIC	Committee on Inst Cooperation
-CIC	Committee on Inst Cooperation
-CIE	ZZZ Curriculm, Instruct, &Eval
-CINE	ZZZ Cinema Studies
-CL	Classics
-CLAR	ZZZ Classical Archaeology
 CLCV	Classical Civilization
-CLE	Clinical Sciences & Engr
-CLER	Clerkship - Medicine
-CLIT	ZZZ Comparative Literature
-CLJ	Criminology, Law, and Justice
-CLS	Clinical Laboratory Science
-CME	Civil & Materials Engineering
+CLE	Clinical Sciences and Engineering
 CMN	Communication
-COM	Communication
-COMB	ZZZ Rsch PerioDis&Oral Mol Bio
-COMM	ZZZ Communications
-COMM	Communication
-COMP	ZZZ English Composition
-COMT	ZZZ Communication & Theater
-CONV	ZZZ Converted Course
-COP	ZZZ Coptic Studies
-CP	ZZZ Classical Philology
 CPSC	Crop Sciences
-CRA	ZZZ Creative Arts
-CRJ	ZZZ Criminal Justice
-CRJ	ZZZ Criminal Justice
 CS	Computer Science
-CS	Computer Science
-CSB	ZZZ Cell and Structural Biolog
-CSC	Computer Science
-CSE	Computational Science and Engr
-CST	Catholic Studies
-CTS	ZZZ Comm in a Tech Society
+CSE	Computational Science and Engineering
 CW	Creative Writing
-CWL	Comparative & World Literature
+CWL	Comparative and World Literature
 CZCH	Czech
-DA	Doctor of Arts
-DADM	Dental Administration
 DANC	Dance
-DAOB	Dent-Applied Oral & Behav Sci
-DAT	Data Analytics
-DBCS	Dent-Biomedical & Clinical Sci
-DBSC	Dental Behavioral Science
-DC	ZZZ Prosthodontics
-DCLE	Dent-Community Learning Exper
-DD	ZZZ Oral Diagnostics
-DE	ZZZ Endodontics
-DERM	ZZZ Dermatology
-DES	Design
-DF	ZZZ Fxd Partial Prosthodontics
-DGS	ZZZ Division of General Studie
-DH	ZZZ Histology
-DH	ZZZ Dairy Husbandry
-DHD	Disability & Human Development
-DIS	ZZZ Disability Studies
-DLAW	ZZZ Discovery Program in Law
-DLG	Dialogue
-DM	ZZZ Dental Administration
-DN	ZZZ Oral Anatomy
-DNCE	Dance
-DO	ZZZ Operative Dentistry
-DOSI	Dent-Oral/Systemic Issues
-DOST	Dent-Oral/Systemic Topics
-DP	ZZZ Periodontics
-DPA	ZZZ Doctor of Public Admin
-DR	ZZZ Dental Radiology
-DROP	Winter Session Drop Course
-DS	ZZZ Dairy Science
-DT	ZZZ Dairy Technology
-EAES	Earth & Environmental Sciences
-EALC	E. Asian Languages & Cultures
-EAP	ZZZ Educational Assistance Pgm
-EB	Employee Benefits
-ECE	Electrical and Computer Engr
-ECE	Electrical and Computer Engr
-ECO	Economics
+EALC	East Asian Language and Culture
+ECE	Electrical and Computer Engineering
 ECON	Economics
-ECON	Economics
-ED	Education
-EDAD	ZZZ Education Administration
-EDL	Educational Leadership
 EDPR	Educational Practice
-EDPS	Educational Policy Studies
 EDUC	Education
-EE	ZZZ Electrical Engineering
-EECS	ZZZ Elec Engr & Comp Science
-EEE	ZZZ Ecology Ethology Evolution
-EIL	English as an Intl Language
-ELED	ZZZ Elem & Early Childhood Ed
-ELSI	Engl Lang & Support for Intls
-ENDO	Endodontics
-ENER	Energy Engineering
-ENG	English
+EIL	English as an International Language
 ENG	Engineering
 ENGH	Engineering Honors
 ENGL	English
-ENGL	English
-ENGR	Engineering
-ENP	ZZZ Environments and People
-ENRE	ZZZ Energy Engineering
-ENS	Environmental Studies
-ENSP	Entrepreneurship
 ENSU	Environmental Sustainability
 ENT	Entomology
-ENTR	Entrepreneurship
 ENVS	Environmental Studies
-EOHS	Environmtl & Occuptnl Hlth Sci
-EOL	Educ Organization & Leadership
-EPID	Epidemiology
-EPL	Estate Planning
-EPOL	Ed Policy, Org & Ldership
+EOL	Educational Organization and Leadership
+EPOL	Education Policy, Organization and Leadership
 EPS	Educational Policy Studies
 EPSY	Educational Psychology
-EPSY	Educational Psychology
-ESE	Earth, Society, & Environment
-ESES	ZZZ Earth Sys, Environ & Socie
-ESL	English as a 2nd Lng Courses
-ESL	English as a Second Language
+ESE	Earth, Society, and Environment
 ESL	English as a Second Language
 EURO	European Union Studies
-EXL	ZZZ Experiential & Service Lrn
-EXR	Exercise Science
 FAA	Fine and Applied Arts
-FACE	ZZZ Family and Consumer Econ
 FIN	Finance
-FIN	Finance
-FLTE	Foreign Language Teacher Educ
-FMED	ZZZ Family Medicine - RSM
-FN	ZZZ Foods and Nutrition
-FOLK	ZZZ Folklore
-FOR	ZZZ Forestry
-FPRA	ZZZ Family Practice
+FLTE	Foreign Language Teacher Education
 FR	French
-FR	French
-FS	ZZZ Food Science
-FSHN	Food Science & Human Nutrition
-FSI	ZZZ Fire Service Institute Crs
-FXPP	ZZZ Fixed Partial Prosthodonti
-GAMD	Guaranteed Admissions Medicine
-GBL	Global Studies
-GC	Graduate College
+FSHN	Food Science and Human Nutrition
 GC	Graduate College
 GCL	Grand Challenge Learning
-GCLS	Graduate College Life Sciences
-GD	ZZZ Genetics and Development
-GE	ZZZ General Engineering
-GEMS	Graduate Educ Medical Sciences
-GENE	ZZZ Genetics, Molecular
-GEOG	Geography
 GEOG	Geography
 GEOL	Geology
-GEOL	ZZZ Geological Sciences
-GER	ZZZ Gerontology
 GER	German
-GER	Germanic Studies
-GKA	Greek, Ancient
-GKM	Greek, Modern
-GLAS	Global Asian Studies
 GLBL	Global Studies
 GMC	Germanic
-GN	ZZZ Genetics
 GRK	Greek
 GRKM	Modern Greek
 GS	General Studies
 GWS	Gender and Women's Studies
-GWS	Gender and Women's Studies
-HA	ZZZ Epidemiology
-HAA	ZZZ History of Arch and Art
-HB	ZZZ Biometry
-HC	ZZZ Community Health Sci
-HCD	Human & Community Development
-HDC	Human Development Counseling
-HDES	Human Dimensions of Env Sys
-HDFE	ZZZ Human Dev and Family Ecol
-HDFS	Human Dev and Family Studies
-HE	ZZZ Environ & Occup Hlth Scncs
-HEB	Hebrew
+HDFS	Human Development and Family Studies
 HEBR	Hebrew, Modern and Classical
-HEC	ZZZ Home Economics
-HED	ZZZ Health Education
-HI	ZZZ Interdisc Public Health
-HIED	ZZZ Higher Education
-HIM	Health Information Management
-HIS	History
 HIST	History
-HIST	History
-HLP	Healthy Living Practitioner
-HLSC	ZZZ Health Science
-HM	ZZZ Health Resources Mgmt
-HMS	Human Services
-HN	Human Nutrition
-HND	ZZZ Human Nutrition&Dietetics
 HNDI	Hindi
-HNUR	Hindi-Urdu
-HON	Honors College
 HORT	Horticulture
-HPA	Health Policy & Administration
-HPED	ZZZ Hist & Philosophy of Educ
 HRD	Human Resource Development
-HRE	Human Resource Education
-HRFS	ZZZ Human Res & Family St
-HRM	ZZZ Health Resources Mgmt
-HSA	ZZZ Health Svcs Administration
-HSCI	ZZZ Health Sciences
-HSM	ZZZ Health Svcs Management
-HSS	ZZZ Health and Safety Studies
-HSTL	Histology
-HT	Health Technology
-HU	ZZZ Humanistic Studies
 HUM	Humanities Courses
-HUM	Humanities
-HUST	ZZZ Humanistic Studies
-HYG	ZZZ Hygiene
-IADM	ZZZ Industrial Administration
 IB	Integrative Biology
-IBT	International Business & Trade
-ID	ZZZ Interior Design
-IDEA	Interdisc Educ in the Arts
-IDS	Information &Decision Sciences
 IE	Industrial Engineering
-IE	Industrial Engineering
-IED	ZZZ Industrial Education
-IHLT	Interdisciplinary Health Sci
-INFE	ZZZ Information Engineering
+IHLT	i-Health Program
 INFO	Informatics
-INO	ZZZ Individual Option
-INST	International Studies
-INTL	ZZZ International Studies
-IP	Intellectual Property
-IPHS	Interdisc Public Hlth Sciences
-IPL	Internship and Prior Learning
 IS	Information Sciences
-ISA	Interdisc Studies in the Arts
-ISE	ZZZ Industrial & Systems Engr
-IT	Information Technology
-ITAL	Italian
 ITAL	Italian
 JAPN	Japanese
-JD	Juris Doctor
 JOUR	Journalism
-JPN	Japanese
 JS	Jewish Studies
-JSO	ZZZ Justice and Social Order
-JST	Jewish Studies
-JUD	ZZZ Judaic Studies
 KIN	Kinesiology
-KINE	ZZZ Kinesiology
-KN	Kinesiology
-KOR	Korean
 KOR	Korean
 LA	Landscape Architecture
-LAC	ZZZ Liberal Arts Colloquia
-LALS	Latin American &Latino Studies
-LAR	ZZZ Labor Relations
 LAS	Liberal Arts and Sciences
-LAS	Liberal Arts and Sciences
-LAST	ZZZ Latin American Studies
-LAST	Latin American & Caribbean St
-LAT	Latin
+LAST	Latin American and Caribbean Studies
 LAT	Latin
 LAW	Law
-LAW	Law
-LCSL	Literatures, Cultrl Stdy &Ling
-LEAD	Org & Community Leadership
-LEIS	ZZZ Leisure Studies
 LER	Labor and Employment Relations
-LES	Legal Studies
-LGLA	Lingala
-LIB	Library & Information Science
-LIBS	ZZZ Library Science
 LING	Linguistics
-LING	Linguistics
-LIR	ZZZ Labor and Indstrial Reltns
-LIS	Library & Information Science
-LIS	Liberal Studies
-LIT	ZZZ Literature
-LITH	Lithuanian
 LLS	Latina/Latino Studies
-LNG	Modern Languages
-LNT	Liberal & Integrative Studies
-LRSC	Learning Sciences
-LSC	ZZZ Lib Studies Colloquia Cour
-LST	ZZZ Labor Studies
 MACS	Media and Cinema Studies
-MAN	ZZZ Management
-MAT	Mathematical Sciences
-MATE	ZZZ Materials Engineering
 MATH	Mathematics
-MATH	Mathematics
-MBA	Master of Business Admin
-MBA	MBA Program
-MBT	Medical Biotechnology
-MC	ZZZ Medicinal Nursing
+MBA	Regular MBA Program Administration
 MCB	Molecular and Cell Biology
-MCS	Mathematical Computer Science
-MD	ZZZ Medical Curriculum
-MD	ZZZ Medical Dietetics
-MDC	Doctor of Medicine - Chicago
-MDCH	Medicinal Chemistry
 MDIA	Media
-MDP	Doctor of Medicine - Peoria
-MDR	Doctor of Medicine - Rockford
 MDVL	Medieval Studies
 ME	Mechanical Engineering
-ME	Mechanical Engineering
-MECH	ZZZ Mechanical Sci &  Engineer
-MED	Medicine
-MENG	Master of Engineering
-MET	ZZZ Medical Technology
-METE	ZZZ Metallurgical Engineering
-MFGE	ZZZ Manufacturing Engineering
-MFST	Metropolitan Food & Env Systms
-MGMT	ZZZ Management
-MGMT	Management
-MGRK	ZZZ Modern Greek
-MGT	Management
-MHEB	ZZZ Modern Hebrew
-MHPE	Medical Education
-MHUM	Medical Humanities
-MI	ZZZ Microbiology & Immunology
 MICR	Microbiology
 MILS	Military Science
-MILS	Military Science
-MIM	Microbiology and Immunology
-MINE	ZZZ Mining Engineering
-MIP	Moleculr & Integrative Physiol
-MIS	Management Information Systems
-MJ	Master of Jurisprudence
-MKT	Marketing
-MKTG	Marketing
-MKTG	ZZZ Marketing
-MLS	Medical Laboratory Sciences
-MLS	ZZZ Medical Lab Sciences
-MOVI	Moving Image Arts
-MP	ZZZ Med Chem & Pharmocog
-MPH	Public Health
-MR	ZZZ Health Info Management
-MS	ZZZ Media Studies
-MSE	Materials Science & Engr
-MSP	Medical Scholars Program
-MSU	ZZZ Mathematical Systems
-MSY	ZZZ Mathematical Systems
-MT	ZZZ Medical Laboratory Scnces
-MTHT	Mathematics Teaching
+MIP	Molecular and Integrative Physiology
+MSE	Materials Science and Engineering
 MUS	Music
-MUS	Music
-MUS	Music
-MUSC	Music Lessons and Ensembles
 MUSE	Museum Studies
-MUSE	Museum and Exhibition Studies
-MVSC	ZZZ Movement Sciences
-NA	ZZZ Medical Surgical Nursing
-NAST	Native American Studies
-NATS	Natural Sciences
-NB	ZZZ Maternal-Child Health
-NC	ZZZ Maternal-Child Health
-ND	ZZZ Psychiatric Nursing
-NE	ZZZ Public Health Nursing
-NEUR	ZZZ Neurology
 NEUR	Neuroscience
-NEUS	Neuroscience
-NF	ZZZ Nursing Service Admin
-NMD	ZZZ Nutr & Medical Dietetics
-NP	ZZZ Maternal-Child Health
-NPRE	Nuclear, Plasma, Radiolg Engr
-NRES	Natural Resources & Environ Sc
-NROS	ZZZ Neurosciences
+NPRE	Nuclear, Plasma, and Radiological Engineering
+NRES	Natural Resources and Environmental Sciences
 NS	Naval Science
-NS	Naval Science
-NUAS	ZZZ Admin Studies in Nursing
-NUCE	ZZZ Nuclear Engineering
-NUEL	Nursing Elective
-NUMC	ZZZ Maternal-Child Nursing
-NUMS	ZZZ Medical-Surgical Nursing
-NUPH	ZZZ Public Health Nursing
-NUPR	Nursing Practicum
-NUPS	ZZZ Psychiatric Nursing
-NUR	ZZZ Nursing
-NURS	Nursing Core
-NUSC	ZZZ Nursing Sciences
-NUSC	ZZZ Nursing Sciences
-NUSP	Nursing Specialty
-NUT	ZZZ Nutrition
 NUTR	Nutritional Sciences
-NUWH	ZZZ Women's Health Nursing
-OBGY	ZZZ Obstetrics & Gynecology
-ODEN	ZZZ Operative Dentistry
-OMDS	Oral Medicine & Diagnostic Sci
-OP	ZZZ Oral Pathology
-OPHT	ZZZ Ophthalmology
-ORLA	Oral Anatomy
-ORTD	Orthodontics
-ORTH	ZZZ Orthopaedics
-OS	ZZZ Oral & Maxillofac Surg
-OSCI	Oral Sciences
-OSUR	Oral and Maxillofacial Surgery
-OT	Occupational Therapy
-OT	ZZZ Occupational Therapy
-OTOL	ZZZ Otolaryngology
-PA	Public Administration
-PAC	ZZZ Public Affairs Colloquia
-PAD	Public Administration
-PAR	Public Affairs Reporting
-PATH	Pathology
 PATH	Pathobiology
 PBIO	Plant Biology
-PCOL	Pharmacology
-PD	ZZZ Pharmacodynamics
-PE	ZZZ Physical Education
-PE	ZZZ Physical Education
-PEDD	Pediatric Dentistry
-PEDS	ZZZ Pediatrics
-PELE	Clerkship Electives-Peoria
-PEM	ZZZ Physical Educ for Men
-PERI	Periodontics
 PERS	Persian
-PEW	ZZZ Physical Educ for Women
-PHAR	Pharmacy
-PHI	Philosophy
 PHIL	Philosophy
-PHIL	Philosophy
-PHS	ZZZ Physical Sciences
-PHSL	ZZZ Physiology
-PHY	ZZZ Physical Sciences
-PHYB	Physiology and Biophysics
 PHYS	Physics
-PHYS	Physics
-PL	ZZZ Pharmacology
 PLPA	Plant Pathology
-PM	ZZZ Pharmaceutics
-PMAD	Pharmacy Administration
-PMED	ZZZ Preventative Medicine
-PMMC	ZZZ Medicinal Chemistry
-PMMP	Medicinal Chem & Pharmacognosy
-PMPC	ZZZ Pharmaceutics
-PMPD	ZZZ Pharmacodynamics
-PMPG	Pharmacognosy
-PMPR	Pharmacy Practice
-PMR	ZZZ Physical Med & Rehab-ALSM
 POL	Polish
-POL	Polish
-POLS	Political Science
 PORT	Portuguese
-PORT	Portuguese
-POS	ZZZ Political Studies
-PP	ZZZ Pharmacognosy
-PPA	Public Policy Analysis
-PPOL	Public Policy
-PR	ZZZ Pharmacy Practice
-PRCL	Preclinical Medicine
-PROS	Prosthodontics
 PS	Political Science
-PS	ZZZ Policy Studies
-PSC	Political Science
-PSCH	Psychology
-PSCI	ZZZ Physical Science
-PSL	Patient Safety Leadership
-PSM	Professional Science Master
-PSOP	Pharmacy Syst,Outcomes &Policy
-PSY	Psychology
-PSYC	ZZZ Psychiatry
+PSM	Professional Science Master's Program
 PSYC	Psychology
-PT	Physical Therapy
-PTL	Privacy and Technology Law
-PUBH	Public Health
-PY	ZZZ Physiology & Biophysics
-QM	ZZZ Quantitative Methods
-RAD	ZZZ Radiology - ALSM
-RAEC	ZZZ Russian & E European Ctr
-RD	ZZZ Orthodontics
-RDG	ZZZ Reading
-RE	Real Estate
-REES	Russian,E European,Eurasian St
+REES	Russian, East European and Eurasian Studies
 REHB	Rehabilitation Counseling
 REL	Religion
-RELE	Clerkship Electives-Rockford
-RELS	Religious Studies
-RENS	ZZZ Renaissance Studies
-REST	Restorative Dentistry
 RHET	Rhetoric and Composition
-RLGN	ZZZ Religious Foundation Crses
-RLST	ZZZ Religious Studies
-RMLG	Romance Linguistics
-RQCR	ZZZ Required Course - Medicine
-RS	ZZZ Orthopaedics
 RSOC	Rural Sociology
 RST	Recreation, Sport, and Tourism
-RTV	ZZZ Radio and Television
-RUM	ZZZ Rumanian
 RUSS	Russian
-RUSS	Russian
-SA	ZZZ Study Abroad
-SABR	Study Abroad
-SAME	S. Asian & Middle Eastern
+SAME	South Asian and Middle Eastern Studies
 SBC	Strategic Brand Communication
 SCAN	Scandinavian
-SCR	ZZZ Serbo-Croatian
-SCS	ZZZ Student Counseling Service
 SE	Systems Engineering and Design
-SEC	ZZZ Selected Education Coll
-SED	ZZZ Safety Education
-SEED	ZZZ Secondary Education
-SELE	ZZZ Selective
 SHS	Speech and Hearing Science
-SJ	Social Justice
-SJP	ZZZ Social Justice Professions
 SLAV	Slavic
-SLAV	Slavic & Baltic Languages &Lit
-SLCL	LiteraturesCulturesLinguistics
+SLCL	Literatures, Cultures, and Linguistics
 SLS	Second Language Studies
-SNSK	Sanskrit
-SOA	Sociology/Anthropology
 SOC	Sociology
-SOC	Sociology
-SOC	ZZZ Sociology/Anthropology
-SOCS	ZZZ Social Science
-SOCS	Social Sciences
 SOCW	Social Work
-SOCW	Social Work
-SOIL	ZZZ Soil Science
 SPAN	Spanish
-SPAN	Spanish
-SPCH	ZZZ Speech
-SPCM	ZZZ Speech Communication
-SPEC	Specialty Medicine
 SPED	Special Education
-SPED	Special Education
-SPM	Sport Management
-SSUB	ZZZ Sub-Specialty Medicine
 STAT	Statistics
-STAT	Statistics
-STS	ZZZ Science, Technology, Soc
-SU	ZZZ Surgery
-SURG	Surgery
 SWAH	Swahili
-SWK	Social Work
-SYSE	ZZZ Systems Engineering
-TA	ZZZ Textiles and Apparel
-TABI	ZZZ Test Credit: Biology
-TACH	Test Credit: Chemistry
-TADR	Trial Advocacy & Dispute Resol
-TALL	Test Credit: Latin - Lyric
-TALV	Test Credit: Latin - Virgil
-TAM	Theoretical and Appl Mechanics
-TAPL	Test Credit: Latin - Lit
-TC	ZZZ Textiles and Clothing
-TCBS	ZZZ Test Credit: Biol Sci
-TCHU	ZZZ Test Credit: Humanities
-TCPS	ZZZ Test Credit: Phys Sci
-TCSS	ZZZ Test Credit: Social Sci
+TAM	Theoretical and Applied Mechanics
 TE	Technology Entrepreneurship
-TEP	Teacher Education
-THE	Theatre
 THEA	Theatre
-THTR	Theatre
-TMGT	Technology and Management
-TRAN	ZZZ Transportation
+TMGT	Technology and Management Courses
 TRST	Translation Studies
 TSM	Technical Systems Management
 TURK	Turkish
-TWEN	ZZZ Test Credit: ACT English
-TX	Taxation
-TYVE	ZZZ Test Credit: SAT Verbal
-UELE	Clerkship Electives-Urbana
-UIC	ZZZ UIC Spec Enrollment at UIS
-UIU	ZZZ UIUC Spec Enroll at UIS
 UKR	Ukrainian
-UNI	University Courses
 UP	Urban and Regional Planning
-UPA	Urban and Public Affairs
-UPP	Urban Planning and Policy
-US	Urban Studies
-USL	US Legal Studies
-VAPP	ZZZ Vet Anat, Physiol, & Pharm
-VB	ZZZ Veterinary Biosciences
 VCM	Veterinary Clinical Medicine
 VM	Veterinary Medicine Courses
-VMS	ZZZ Veterinary Medical Science
-VOT	ZZZ Vocational Technical Educa
-VP	ZZZ Veterinary Pathobiology
-VPD	ZZZ Veterinary Pathobiol Disc
-VPH	ZZZ Veterinary Path & Histol
-WCS	ZZZ Work/Culture/Society
-WGGP	Women Gender Global Perspect
-WGS	Women and Gender Studies
-WITH	ZZZ Withdrawal
 WLOF	Wolof
-WMS	ZZZ Women's Studies
 WRIT	Writing Studies
-WRTE	ZZZ Writing Studies
-WS	ZZZ Women's Studies
-WS	ZZZ Women's Studies
-XFER	Transfered Credit
-XFER	Transferred Credit
-XFER	Transferred Credit
-XTRC	Transfer Credit Converted
-XTRC	Transfer Credit Converted
-YDSH	ZZZ Yiddish
 YDSH	Yiddish
-YRUB	ZZZ Yorubic
-ZOOL	ZZZ Zoology
-ZULU	Zulu
