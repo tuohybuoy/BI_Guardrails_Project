@@ -58,7 +58,7 @@ Here's what the Percentage Bar Chart tool looks like:
 
 The tool uses a single dataset: the [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa) compiled by Prof. Wade Fagen-Ulmschneider, used here with his kind permission.
 
-The data summarizes grades awarded at the Champaign-Urbana campus of the University of Illinois from spring semester 2010 through summer 2019. Please see the end of this document for more information and descriptive statistics.
+The data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2019. Please see the end of this document for more information and descriptive statistics.
 
 ### Use Cases
 
@@ -66,7 +66,7 @@ The tool can help investigate questions like these:
 * Does Sociology award significantly more As than other subjects, and does Chemistry award significantly less?
 * If a subject awards fewer As, does it necessarily award more Ds and Fs?
 * Within Chemistry, do 100-level or 200-level courses award more As than average?
-* Has there been significant grade inflation over time within 100-level Chem courses?
+* Has there been significant grade inflation over time within Chemistry courses?
 
 Any Business Intelligence tool can help explore these questions. The Percentage Bar Chart adds value by indicating the size of differences that are likely to be nonrandom within a specified range of confidence. This helps users focus on the differences that are more likely to be meaningful.
 
@@ -98,56 +98,84 @@ Normally, leave the *Adjust False Positive Test by Number of Groups* box checked
 
 Hover over each group to view its details: the number and percent of selected grades awarded, plus the size and range of any detected difference from other groups in the chart.
 
-## Usage
-
 ### Examples
 
-What course subjects are significantly more (or less) likely to award As (or Fs) than the others?
+1) What course subjects are significantly more (or less) likely to award As (or Fs) than the others?
 
-![A Grade Percentages by Subject for Fall 2018](common/images/As_by_Subject.png)
-*Accountancy seemed modestly less likely to award As and A+s than other subjects. in the Fall 2018 semester.*
+![A Grade Percentages by Subject for Spring 2019](common/images/As_by_Subject.png)
+*Accountancy seemed marginally less likely to award As and A+s than other subjects. in the Fall 2018 semester.*
 
-If a subject awards significantly more As, is it more or less likely to award significantly more Fs?
+2) If a subject awards significantly more As, is it more or less likely to award significantly more Fs?
 
-![A Grade Percentages by Subject for Fall 2018](common/images/Fs_by_Subject.png)
+![A Grade Percentages by Subject for Spring 2019](common/images/Fs_by_Subject.png)
 *Accountancy was also marginally less likely to award Fs than other subjects.*
 
-* Within a given subject, which course levels (100, 200, 300, etc.) differ significantly?
-  * How do different subjects compare in terms of As awarded by level?
-* Within a given subject and level, how do individual courses or instructors compare?
-* For a given subject and level, has there been grade inflation over time?
-* What happens when we raise or lower the certainty thresholds?
+3) Do Chemistry courses appear to have experienced grade inflation over time?
 
-### Example Walkthrough
+![Chemistry Grade Inflation in Spring Semesters](common/images/Chemistry_Grade_Inflation.png)
+*Overall, Chemistry courses experienced a significant increase in the number of As and A+s awarded in fall semesters.*
 
-### Controls and Colors
+4) Which instructors of 100-level Chemistry courses award significantly more or fewer As than the rest?
 
+*Left as an exercise for the reader!*
 
-
-
-## Details
+## Project Details
 
 ### The [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa)
 
-This dataset was provided to meet a number of FOIA requests. It summarizes grades earned in courses of more than 20 students where not all students earned the same grade. Smaller courses and uniformly-graded courses were excluded for privacy reasons.
+As mentioned above, the data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2019. Grades are summarized by semester, course, and primary instructor name.
 
-The current dataset contains 2,583,054 grades awarded over nine years in 3,795 unique courses and 161 subjects. These courses were taught by 7,273 unique instructors (unique by name).
+This dataset was provided to meet a number of FOIA requests. It includes grades from courses of more than 20 students where not all students earned the same grade. Smaller courses and uniformly-graded courses were excluded for privacy reasons.
 
-By year, grade totals range from 152,303 (2012) to 414,919 (2011).
+The current dataset contains 2,710,856 grades awarded over ten years in 5,138 unique courses and 153 subjects. These courses were taught by 7,394 unique instructors (unique by name).
 
-For any given course in an academic term, grade counts range from 21 to 2,403.
+By year, grade totals range from 150,814 (2012) to 409,018 (2011). Note that the grade counts for the following semesters are much larger or smaller than the counts in neighboring semesters: Summer 2011, Spring 2012, Summer 2015 and Summer 2016. Use caution when interpreting results from those semesters.
+
+For any single course in a semester, grade counts range from 21 to 2,403.
 
 Letter grades range from A+ to F, plus "W" for students who withdrew from a course after official drop deadline.
 
-Note: "Year" in the dataset refers to calendar year, not academic year.
+Note: "Year" in the dataset refers to calendar year, not academic year. At the UIUC campus, academic years begin in fall and end the following summer.
 
-### App Controls
+### The Interface
+
+The tool is written in R and uses the base Shiny package for interactivity.
+
+The functionality would have been orders of magnitude faster to implement in Tableau, but unfortunately only commercial Tableau Desktop supports the R or Python scripts needed for statistical inference tests. Microsoft Power BI does support using R to create computed columns, but those columns are at the detail level of the base data -- not at the level of a rollup, as would be required for the Percentage Bar Chart tool.
 
 ### The Statistics
+
+Normally, researchers employ inferential statistical tests to help construct experiments and interpret results. Unlike most researchers, the Percentage Bar Chart tool has no prior expectations about what its test results might be. This creates certain drawbacks. (**EDIT**)
+
+For each group in a chart, the tool runs an [exact binomial test](https://en.wikipedia.org/wiki/Binomial_test) to compare the group's proportion of selected grades against the proportion in all other groups in the chart.
+
+For example, if the chart shows As earned in each Chemistry course: the tool compares the percentage of As in CHEM 101 against the percentage in CHEM 102 through 584 combined. The tool then compares CHEM 102 against CHEM 101 plus 103 - 584 combined, and so on.
+
+The binomial test is convenient because it gives exact p-values for groups with small numbers of grades, unlike a parametric chi-square test. Against this dataset, the binomial test runs about as fast as a chi-square test -- so there's no sacrifice in speed.
+
+For each group, the tool considers all other groups as the "population" rather than constructing a contingency table of the current group vs. all others. This is because the number of grades in other groups almost always overwhelms the number in the current group, and that degree of imbalance would mute many interesting differences. 
+
+The tool uses a two-tailed test because it considers higher and lower grade proportions equally likely.
+
+By default, the tool performs a Bonferroni correction to guard against the occurrence of one or more false positives across multiple tests. This is controlled by the *Adjust False Positive Test by Number of Groups* checkbox. The Bonferroni test is sometimes considered overly conservative, but it is simple and convenient.
+
+As far as identifying "true positives" goes, the tool runs into a basic problem. Normally, researchers conduct power analysis to determine how much sample data they require to detect an effect of a certain size. This tool doesn't have that luxury, since course grades have already been awarded. Furthermore, the tool looks for effects of any size, not an anticipated size.
+
+Thus the tool performs a kind of post-hoc power analysis. For each group in a chart, the tool computes the smallest effect that could be detected at or above the specified confidence level. Then, if the group shows an effect of at least that size, it's displayed onscreen.
+
+This may not be as kosher as I would like. One contrary argument is that post-hoc power analysis is just a different way of showing p-values. A more fundamental argument is that controlling for Type II error is only meaningful before any data is collected. If this is true, at least the Percentage Bar Chart tool is far from alone in the way is misuses power analysis.
+
+The tool classifies differences as small, medium or large depending on Jacob Cohen's conventions for effect sizes in exact tests of proportions.
+* Small: effect sizes of absolute value in the range [0.2, 0.5)
+* Medium: [0.5, 0.8)
+* Large: 0.8 and above
+
+"Tiny" is reserved for statistically significant effect sizes below 0.2. "NA" indicates tests with nonsignificant results, or selections with only one group where no comparison is possible.
 
 
 ### Handy Links
 
 [The UIUC Course Catalog](https://courses.illinois.edu/)
 
-## Left 
+## Left To Do
+
