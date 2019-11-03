@@ -66,7 +66,7 @@ The tool can help investigate questions like these:
 * Does Sociology award significantly more As than other subjects, and does Chemistry award significantly less?
 * If a subject awards fewer As, does it necessarily award more Ds and Fs?
 * Within Chemistry, do 100-level or 200-level courses award more As than average?
-* Has there been significant grade inflation over time within 100-level Chem courses?
+* Has there been significant grade inflation over time within Chemistry courses?
 
 Any Business Intelligence tool can help explore these questions. The Percentage Bar Chart adds value by indicating the size of differences that are likely to be nonrandom within a specified range of confidence. This helps users focus on the differences that are more likely to be meaningful.
 
@@ -98,50 +98,41 @@ Normally, leave the *Adjust False Positive Test by Number of Groups* box checked
 
 Hover over each group to view its details: the number and percent of selected grades awarded, plus the size and range of any detected difference from other groups in the chart.
 
-## Usage
-
 ### Examples
 
-What course subjects are significantly more (or less) likely to award As (or Fs) than the others?
+1) What course subjects are significantly more (or less) likely to award As (or Fs) than the others?
 
-![A Grade Percentages by Subject for Fall 2018](common/images/As_by_Subject.png)
-*Accountancy seemed modestly less likely to award As and A+s than other subjects. in the Fall 2018 semester.*
+![A Grade Percentages by Subject for Spring 2019](common/images/As_by_Subject.png)
+*Accountancy seemed marginally less likely to award As and A+s than other subjects. in the Fall 2018 semester.*
 
-If a subject awards significantly more As, is it more or less likely to award significantly more Fs?
+2) If a subject awards significantly more As, is it more or less likely to award significantly more Fs?
 
-![A Grade Percentages by Subject for Fall 2018](common/images/Fs_by_Subject.png)
+![A Grade Percentages by Subject for Spring 2019](common/images/Fs_by_Subject.png)
 *Accountancy was also marginally less likely to award Fs than other subjects.*
 
-* Within a given subject, which course levels (100, 200, 300, etc.) differ significantly?
-  * How do different subjects compare in terms of As awarded by level?
-* Within a given subject and level, how do individual courses or instructors compare?
-* For a given subject and level, has there been grade inflation over time?
-* What happens when we raise or lower the certainty thresholds?
+3) Do Chemistry courses appear to have experienced grade inflation over time?
 
-### Example Walkthrough
-
-### Controls and Colors
+![Chemistry Grade Inflation in Spring Semesters](common/images/Chemistry_Grade_Inflation.png)
+*Overall, Chemistry courses experienced a significant increase in the number of As and A+s awarded in fall semesters.*
 
 
-
-
-## Details
+## Project Details
 
 ### The [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa)
 
 This dataset was provided to meet a number of FOIA requests. It summarizes grades earned in courses of more than 20 students where not all students earned the same grade. Smaller courses and uniformly-graded courses were excluded for privacy reasons.
 
-The current dataset contains 2,583,054 grades awarded over nine years in 3,795 unique courses and 161 subjects. These courses were taught by 7,273 unique instructors (unique by name).
+The current dataset contains 2,710,856 grades awarded over nine years in 5,138 unique courses and 153 subjects. These courses were taught by 7,394 unique instructors (unique by name).
 
-By year, grade totals range from 152,303 (2012) to 414,919 (2011).
+By year, grade totals range from 150,814 (2012) to 409,018 (2011). The grade counts for the following semesters are much larger or smaller than we'd expect: Summer 2011, Spring 2012, Summer 2015 and Summer 2016. Use caution when interpreting results from those semesters.
 
 For any given course in an academic term, grade counts range from 21 to 2,403.
 
 Letter grades range from A+ to F, plus "W" for students who withdrew from a course after official drop deadline.
 
-Note: "Year" in the dataset refers to calendar year, not academic year.
+Note: "Year" in the dataset refers to calendar year, not academic year. At the UIUC campus, academic years begin in fall and end the following summer.
 
-### App Controls
+### The Interface
 
 ### The Statistics
 
@@ -150,4 +141,5 @@ Note: "Year" in the dataset refers to calendar year, not academic year.
 
 [The UIUC Course Catalog](https://courses.illinois.edu/)
 
-## Left 
+## Left To Do
+
