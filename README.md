@@ -117,17 +117,26 @@ Hover over each group to view its details: the number and percent of selected gr
 
 4) Which instructors of 100-level Chemistry courses award significantly more or fewer As than the rest?
 
+<<<<<<< HEAD
 *Left as an exercise for the reader!*
 
+=======
+>>>>>>> 9e1875c96038765f95a3704204f0566ec035c764
 ## Project Details
 
 ### The [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa)
 
 As mentioned above, the data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2019. Grades are summarized by semester, course, and primary instructor name.
 
+<<<<<<< HEAD
 This dataset was provided to meet a number of FOIA requests. It includes grades from courses of more than 20 students where not all students earned the same grade. Smaller courses and uniformly-graded courses were excluded for privacy reasons.
 
 The current dataset contains 2,710,856 grades awarded over ten years in 5,138 unique courses and 153 subjects. These courses were taught by 7,394 unique instructors (unique by name).
+=======
+The current dataset contains 2,710,856 grades awarded over nine years in 5,138 unique courses and 153 subjects. These courses were taught by 7,394 unique instructors (unique by name).
+
+By year, grade totals range from 150,814 (2012) to 409,018 (2011). The grade counts for the following semesters are much larger or smaller than we'd expect: Summer 2011, Spring 2012, Summer 2015 and Summer 2016. Use caution when interpreting results from those semesters.
+>>>>>>> 9e1875c96038765f95a3704204f0566ec035c764
 
 By year, grade totals range from 150,814 (2012) to 409,018 (2011). Note that the grade counts for the following semesters are much larger or smaller than the counts in neighboring semesters: Summer 2011, Spring 2012, Summer 2015 and Summer 2016. Use caution when interpreting results from those semesters.
 
@@ -136,12 +145,17 @@ For any single course in a semester, grade counts range from 21 to 2,403.
 Letter grades range from A+ to F, plus "W" for students who withdrew from a course after official drop deadline.
 
 Note: "Year" in the dataset refers to calendar year, not academic year. At the UIUC campus, academic years begin in fall and end the following summer.
+<<<<<<< HEAD
 
 ### The Interface
 
 The tool is written in R and uses the base Shiny package for interactivity.
 
 The functionality would have been orders of magnitude faster to implement in Tableau, but unfortunately only commercial Tableau Desktop supports the R or Python scripts needed for statistical inference tests. Microsoft Power BI does support using R to create computed columns, but those columns are at the detail level of the base data -- not at the level of a rollup, as would be required for the Percentage Bar Chart tool.
+=======
+
+### The Interface
+>>>>>>> 9e1875c96038765f95a3704204f0566ec035c764
 
 ### The Statistics
 
