@@ -98,6 +98,8 @@ Normally, leave the *Adjust False Positive Test by Number of Groups* box checked
 
 Hover over each group to view its details: the number and percent of selected grades awarded, plus the size and range of any detected difference from other groups in the chart.
 
+![View Tooltip](common/images/View_Tooltip.png)
+
 ### Examples
 
 1) What course subjects are significantly more (or less) likely to award As (or Fs) than the others?
@@ -117,26 +119,17 @@ Hover over each group to view its details: the number and percent of selected gr
 
 4) Which instructors of 100-level Chemistry courses award significantly more or fewer As than the rest?
 
-<<<<<<< HEAD
 *Left as an exercise for the reader!*
 
-=======
->>>>>>> 9e1875c96038765f95a3704204f0566ec035c764
 ## Project Details
 
 ### The [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa)
 
 As mentioned above, the data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2019. Grades are summarized by semester, course, and primary instructor name.
 
-<<<<<<< HEAD
 This dataset was provided to meet a number of FOIA requests. It includes grades from courses of more than 20 students where not all students earned the same grade. Smaller courses and uniformly-graded courses were excluded for privacy reasons.
 
 The current dataset contains 2,710,856 grades awarded over ten years in 5,138 unique courses and 153 subjects. These courses were taught by 7,394 unique instructors (unique by name).
-=======
-The current dataset contains 2,710,856 grades awarded over nine years in 5,138 unique courses and 153 subjects. These courses were taught by 7,394 unique instructors (unique by name).
-
-By year, grade totals range from 150,814 (2012) to 409,018 (2011). The grade counts for the following semesters are much larger or smaller than we'd expect: Summer 2011, Spring 2012, Summer 2015 and Summer 2016. Use caution when interpreting results from those semesters.
->>>>>>> 9e1875c96038765f95a3704204f0566ec035c764
 
 By year, grade totals range from 150,814 (2012) to 409,018 (2011). Note that the grade counts for the following semesters are much larger or smaller than the counts in neighboring semesters: Summer 2011, Spring 2012, Summer 2015 and Summer 2016. Use caution when interpreting results from those semesters.
 
@@ -145,21 +138,16 @@ For any single course in a semester, grade counts range from 21 to 2,403.
 Letter grades range from A+ to F, plus "W" for students who withdrew from a course after official drop deadline.
 
 Note: "Year" in the dataset refers to calendar year, not academic year. At the UIUC campus, academic years begin in fall and end the following summer.
-<<<<<<< HEAD
 
 ### The Interface
 
 The tool is written in R and uses the base Shiny package for interactivity.
 
 The functionality would have been orders of magnitude faster to implement in Tableau, but unfortunately only commercial Tableau Desktop supports the R or Python scripts needed for statistical inference tests. Microsoft Power BI does support using R to create computed columns, but those columns are at the detail level of the base data -- not at the level of a rollup, as would be required for the Percentage Bar Chart tool.
-=======
-
-### The Interface
->>>>>>> 9e1875c96038765f95a3704204f0566ec035c764
 
 ### The Statistics
 
-Normally, researchers employ inferential statistical tests to help construct experiments and interpret results. Unlike most researchers, the Percentage Bar Chart tool has no prior expectations about what its test results might be. This creates certain drawbacks. (**EDIT**)
+#### Test Type
 
 For each group in a chart, the tool runs an [exact binomial test](https://en.wikipedia.org/wiki/Binomial_test) to compare the group's proportion of selected grades against the proportion in all other groups in the chart.
 
@@ -167,29 +155,50 @@ For example, if the chart shows As earned in each Chemistry course: the tool com
 
 The binomial test is convenient because it gives exact p-values for groups with small numbers of grades, unlike a parametric chi-square test. Against this dataset, the binomial test runs about as fast as a chi-square test -- so there's no sacrifice in speed.
 
+#### Approach
+
 For each group, the tool considers all other groups as the "population" rather than constructing a contingency table of the current group vs. all others. This is because the number of grades in other groups almost always overwhelms the number in the current group, and that degree of imbalance would mute many interesting differences. 
 
 The tool uses a two-tailed test because it considers higher and lower grade proportions equally likely.
 
-By default, the tool performs a Bonferroni correction to guard against the occurrence of one or more false positives across multiple tests. This is controlled by the *Adjust False Positive Test by Number of Groups* checkbox. The Bonferroni test is sometimes considered overly conservative, but it is simple and convenient.
+#### Statistical Significance 
 
-As far as identifying "true positives" goes, the tool runs into a basic problem. Normally, researchers conduct power analysis to determine how much sample data they require to detect an effect of a certain size. This tool doesn't have that luxury, since course grades have already been awarded. Furthermore, the tool looks for effects of any size, not an anticipated size.
+By default, the tool performs a [Bonferroni correction](https://en.wikipedia.org/wiki/Bonferroni_correction) to guard against the occurrence of one or more false positives across multiple tests. This is controlled by the *Adjust False Positive Test by Number of Groups* checkbox.
 
-Thus the tool performs a kind of post-hoc power analysis. For each group in a chart, the tool computes the smallest effect that could be detected at or above the specified confidence level. Then, if the group shows an effect of at least that size, it's displayed onscreen.
+The Bonferroni correction is considered overly conservative when the multiple tests are related, as they are here. However, it is simple and convenient.
 
-This may not be as kosher as I would like. One contrary argument is that post-hoc power analysis is just a different way of showing p-values. A more fundamental argument is that controlling for Type II error is only meaningful before any data is collected. If this is true, at least the Percentage Bar Chart tool is far from alone in the way is misuses power analysis.
+#### Statistical Power
 
-The tool classifies differences as small, medium or large depending on Jacob Cohen's conventions for effect sizes in exact tests of proportions.
+As far as identifying "true positives" goes, the tool runs into a basic problem. Normally, researchers conduct power analysis to determine how much sample data they require to detect an effect of an anticipated size. This tool doesn't have that luxury, since course grades have already been awarded. Furthermore, the tool looks for effects of any size, not an anticipated size.
+
+Instead, the tool performs a kind of post-hoc power analysis. For each group in a chart, the tool computes the smallest "true" effect that could be detected at or above the specified power threshold. Then, if the group shows an effect of at least that size, it's displayed onscreen.
+
+One contrary argument is that using observed power is just a different way of using p-values. A more fundamental argument is that controlling for Type II error is only meaningful before any data is collected, which is the only point it's acceptable to assume that the null hypothesis is false. At least the Percentage Bar Chart tool is far from alone in the way is misuses power analysis!
+
+#### Effect Size
+
+The tool computes effect sizes for two proportions. It classifies differences as small, medium or large depending on Jacob Cohen's conventions for these effect sizes.
 * Small: effect sizes of absolute value in the range [0.2, 0.5)
 * Medium: [0.5, 0.8)
 * Large: 0.8 and above
 
 "Tiny" is reserved for statistically significant effect sizes below 0.2. "NA" indicates tests with nonsignificant results, or selections with only one group where no comparison is possible.
 
+#### Confidence Interval
 
-### Handy Links
+The tooltips include confidence intervals for each group's degree of difference from other groups in the chart. Example: "Difference Range: 14.5% to 37.3% Higher".
+
+These are based on the binomial test's confidence interval for the "true" proportion of selected grades in the group, minus the measured proportion of selected grades in other groups. The "other groups" proportion is treated as exact, since the tool treats other groups as a population rather than a sample. This simplifies the calculation but sacrifices potential nuance.
+
+The *Max Chance of False Positive* slider feeds the calculation of confidence intervals.
+
+## Handy Links
+
+[Online Interactive Percentage Bar Chart Tool](https://tuohybuoy.shinyapps.io/uiuc_grade_explorer_with_inferential_guardrails)
 
 [The UIUC Course Catalog](https://courses.illinois.edu/)
 
 ## Left To Do
+
+It would be shorter to list the work that's not left to do. Here are some updates that would make the tool more useful:
 
