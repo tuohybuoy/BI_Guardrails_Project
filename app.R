@@ -784,6 +784,8 @@ server <- function (input, output){
       gradeAnalysisDF <- add_column(gradeSummary,
                                     `Test Statistic` = as.double(NA),
                                     `p-Value` = as.double(NA),
+                                    `Diff CI Lower Bound` = as.double(NA),
+                                    `Diff CI Upper Bound` = as.double(NA),
                                     `Statistical Significance Achieved` = FALSE,
                                     `Effect Size` = as.double(NA),
                                     `Min Detectable Effect Size` = as.double(NA))
