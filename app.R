@@ -61,6 +61,15 @@ testTypes <- c("Auto", "Binomial Exact", "X2 Goodness of Fit", "X2 Independence"
 testTypeInitVal = "Binomial Exact"
 testType <- testTypeInitVal  # Placeholder for "Test Type" user input
 
+# Default colors for given magnitudes of difference between -100% and 100%.
+
+diffSizeScale <- c(-1.0, 1.0)
+diffColorScale <- c("#d1e5f0", "#fee0b6")
+
+diffSizeColors <- data.frame(DiffSize=seq(-1.0, 1.0, 0.01),
+                             DiffColor=colorRampPalette(c("#2166ac", "#4393c3", "#92c5de", "#d1e5f0", "#ffffff", "#fee0b6", "#fdb863", "#e08214", "#b35806"))(201),
+                             stringsAsFactors=FALSE)
+
 # Magnitudes and cutoffs for effect sizes.
 effectSizeMagnitudes <- data.frame(EffectSizeMagnitude=c("NA", "Tiny", "Small", "Medium", "Large"),
                                    # Conventional cutoffs for chi-square effect sizes
@@ -75,13 +84,6 @@ effectSizeMagnitudes <- data.frame(EffectSizeMagnitude=c("NA", "Tiny", "Small", 
                                                      cohen.ES(test="p", size="small")$effect.size,
                                                      cohen.ES(test="p", size="medium")$effect.size,
                                                      cohen.ES(test="p", size="large")$effect.size),
-                                   stringsAsFactors=FALSE)
-
-# Labels and colors for effect sizes, with sign included.
-# The sign will indicate whether a given measure is smaller or larger in comparison to others.
-effectSizeLblsColors <- data.frame(EffectSizeLabel=c("+ Large", "+ Medium", "+ Small", "+ Tiny", "NA", "- Tiny", "- Small", "- Medium", "- Large"),
-                                   # Orange-blue diverging color palette, obtained from RColorBrewer site: http://colorbrewer2.org/
-                                   EffectSizeColor=c("#2166ac", "#4393c3", "#92c5de", "#d1e5f0", "#f7f7f7", "#fee0b6", "#fdb863", "#e08214", "#b35806"),
                                    stringsAsFactors=FALSE)
 
 effectSizeExcludeChoice <- "NA"      # Don't show "NA" as a dropdown choice for effect sizes
@@ -109,13 +111,33 @@ renameFilterFieldValCol <- function(filterField) { "filterValue" }
 
 isNotNA <- function(x) { !is.na(x) }
 
-# Given an effect-size label, get the correponding cutoff.
+# Remove diff sizes for nonsignificant tests / tests with insufficient data points.
 
-effectSizeCutoff <- function(testType, effectSizeLabel) {
-  # Return cutoff corresponding to test type.
+rmNSDiffs <- function(diff, effectSize) {
+  ifelse(is.na(effectSize), NA, diff)
+}
+
+# Constrain range of "diffs in % grades of interest" to the range with matching fill colors.
+
+constrainDiff2ColorRange <- function(diff) {
+  round(pmax(pmin(diff, max(diffSizeColors$DiffSize)), min(diffSizeColors$DiffSize)), 2)
+}
+
+# Return the colors that corresponds to particular differences in % selected grades.
+
+mapDiff2Color <- function(diff, effectSize) {
+  
+  # Remove nonsignificant diffs.
+  # Constrain remaining diffs to the available range of colors. Round to 2 decimals.
+  diff <- constrainDiff2ColorRange(rmNSDiffs(diff,effectSize))
+  
+  # Choose colors.
   case_when(
-    str_detect(testType, "X2") ~ effectSizeMagnitudes$EffectSizeX2[effectSizeMagnitudes$EffectSizeMagnitude==effectSizeLabel],
-    TRUE ~ effectSizeMagnitudes$EffectSizeExact[effectSizeMagnitudes$EffectSizeMagnitude==effectSizeLabel]
+    # If diff is NA, color as middle gray.
+    is.na(diff) ~ diffSizeColors$DiffColor[ceiling(nrow(diffSizeColors)/2)],
+
+    # Else return matching color.
+    TRUE ~ diffSizeColors$DiffColor[findInterval(diff, diffSizeColors$DiffSize)]
   )
 }
 
@@ -160,7 +182,7 @@ grades <- getGradeColNames(CrsGrades, GradeQualPts$Grade)
 gradeInitVals <- grades[1:2]
 
 # Function to populate LOVs with full lists of values available.
-# Returrn list of filter fields and values.
+# Return list of filter fields and values.
 # This logic is a quick fix until reactive LOVs are working.
 
 populateLOVs <- function(inDF, filterFields, filterValues) {
@@ -280,9 +302,6 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
                                  propSpecGrades <- gradeCounts[3]
                                  outsideCounts <- gradeCounts[4:5]
                                  propOutsideSpecGrades <- gradeCounts[6]
-                                 # Null hypothesis: proportion of specified grades in outside groups.
-                                 H0Prop <- outsideCounts[1]/sum(outsideCounts)
-                                 
                                  
                                  # Identify the smallest magnitude of effect size which the current test could
                                  # identify given the current group size and alpha + power settings.
@@ -294,7 +313,7 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
                                                             )$h
                                  
                                  # Run test
-                                 testResult <- binom.test(x=thisCounts, p=H0Prop, alternative="two.sided", conf.level=(1.0-alpha))
+                                 testResult <- binom.test(x=thisCounts, p=propOutsideSpecGrades, alternative="two.sided", conf.level=(1.0-alpha))
                                  
                                  # Get test results and sig level
                                  testStatistic <- testResult$statistic
@@ -324,6 +343,7 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
                                  add_column(gradeRow,
                                             `Test Statistic` = testStatistic,
                                             `p-Value` = pValue,
+                                            `Diff in % Grades of Interest` = propSpecGrades - propOutsideSpecGrades,
                                             `Diff CI Lower Bound` = confInt[1] - propOutsideSpecGrades,
                                             `Diff CI Upper Bound` = confInt[2] - propOutsideSpecGrades,
                                             `Statistical Significance Achieved` = isSig,
@@ -337,6 +357,7 @@ BinomialExactTest <- function(gradeSummary, alpha, minPower) {
     gradeAnalysisDF <- add_column(gradeSummary,
                                   `Test Statistic` = as.double(NA),
                                   `p-Value` = as.double(NA),
+                                  `Diff in % Grades of Interest` = as.double(NA),
                                   `Diff CI Lower Bound` = as.double(NA),
                                   `Diff CI Upper Bound` = as.double(NA),
                                   `Statistical Significance Achieved` = FALSE,
@@ -420,6 +441,7 @@ X2GoodnessofFitTest <- function(gradeSummary, alpha, minPower,
       add_column(gradeRow,
                  `Test Statistic` = testStatistic,
                  `p-Value` = pValue,
+                 `Diff in % Grades of Interest` = propSpecGrades - propOutsideSpecGrades,
                  # Is the result statistically significant?
                  `Statistical Significance Achieved` = isSig,
                  `Effect Size` = effectSize,
@@ -432,6 +454,7 @@ X2GoodnessofFitTest <- function(gradeSummary, alpha, minPower,
     gradeAnalysisDF <- add_column(gradeSummary,
                                   `Test Statistic` = as.double(NA),
                                   `p-Value` = as.double(NA),
+                                  `Diff in % Grades of Interest` = as.double(NA),
                                   `Statistical Significance Achieved` = FALSE,
                                   `Effect Size` = as.double(NA),
                                   `Min Detectable Effect Size` = as.double(NA)
@@ -513,6 +536,7 @@ X2IndependenceTest <- function(gradeSummary, alpha, minPower,
       add_column(gradeRow,
                  `Test Statistic` = testStatistic,
                  `p-Value` = pValue,
+                 `Diff in % Grades of Interest` = propSpecGrades - propOutsideSpecGrades,
                  # Is the result statistically significant?
                  `Statistical Significance Achieved` = isSig,
                  `Effect Size` = effectSize,
@@ -525,6 +549,7 @@ X2IndependenceTest <- function(gradeSummary, alpha, minPower,
     gradeAnalysisDF <- add_column(gradeSummary,
                                   `Test Statistic` = as.double(NA),
                                   `p-Value` = as.double(NA),
+                                  `Diff in % Grades of Interest` = as.double(NA),
                                   `Statistical Significance Achieved` = FALSE,
                                   `Effect Size` = as.double(NA),
                                   `Min Detectable Effect Size` = as.double(NA)
@@ -784,6 +809,7 @@ server <- function (input, output){
       gradeAnalysisDF <- add_column(gradeSummary,
                                     `Test Statistic` = as.double(NA),
                                     `p-Value` = as.double(NA),
+                                    `Diff in % Grades of Interest` = as.double(NA),
                                     `Diff CI Lower Bound` = as.double(NA),
                                     `Diff CI Upper Bound` = as.double(NA),
                                     `Statistical Significance Achieved` = FALSE,
@@ -798,11 +824,11 @@ server <- function (input, output){
       gradeAnalysisDF <- X2IndependenceTest(gradeSummary, alpha, minPower)
     }
 
-    # Label effect sizes and assign colors for plotting.
+    # Assign colors to diffs in % grades of interest.
+    # Assign size labels to effect sizes.
     gradeAnalysisDF %<>%
-      mutate(EffectSizeLabel = labelEffectSizes(testType, `Effect Size`)) %>%
-      inner_join(effectSizeLblsColors, by="EffectSizeLabel") %>%
-      rename(`Effect Size Magnitude` = EffectSizeLabel)
+      mutate(DiffSizeColor = mapDiff2Color(`Diff in % Grades of Interest`, `Effect Size`),
+             `Effect Size Magnitude` = labelEffectSizes(testType, `Effect Size`))
     
     # Return computations from the reactive block
     
@@ -815,12 +841,13 @@ server <- function (input, output){
                                  "Prop Outside Grades of Interest",
                                  "Test Statistic",
                                  "p-Value",
+                                 "Diff in % Grades of Interest",
                                  "Diff CI Lower Bound",
                                  "Diff CI Upper Bound",
+                                 "DiffSizeColor",
                                  "Statistical Significance Achieved",
                                  "Effect Size",
                                  "Effect Size Magnitude",
-                                 "EffectSizeColor",
                                  "Min Detectable Effect Size"))
     
     
@@ -843,15 +870,16 @@ server <- function (input, output){
     # Generate symbols for chart items for use in GGVis' formula-type interface.
     xVar <- prop("x2", as.symbol("Prop Grades of Interest"))
     yVar <- prop("y", as.symbol(groupVal()))
-    fillVar <- prop("fill", as.symbol("Effect Size Magnitude"))
-    
+
     # Create offset to make sure y-axis intersects with x-axis at x==0.
     yOffset <- scaled_value("x", 0)
     
     # Generate plot and tooltip function
     gradeAnalysisDF() %>%
       ggvis() %>%
-      layer_rects(x=0, x2=xVar, y=yVar, height=band(), fill=fillVar) %>%
+      # Generate bars of bar chart.
+      # For fill, use := to override default colors.
+      layer_rects(x=0, x2=xVar, y=yVar, height=band(), fill:=~DiffSizeColor) %>%
       add_axis("y", offset=yOffset, title="", grid=FALSE, tick_size_major=0, tick_padding=5,
                properties = axis_props(
                  labels = list(fontSize=12)
@@ -863,14 +891,6 @@ server <- function (input, output){
                  axis = list(stroke="white"),
                  labels = list(fontSize=0),
                  title = list(fontSize=14))) %>%
-      add_legend("fill", title="Difference From Others",
-                 values=effectSizeLblsColors$EffectSizeLabel,
-                 properties = legend_props(
-                   title = list(fontSize=12),
-                   labels = list(fontSize=12)
-                 )) %>%
-      scale_ordinal("fill", domain=effectSizeLblsColors$EffectSizeLabel,
-                    range=effectSizeLblsColors$EffectSizeColor) %>%
       # Function for interactive tooltips
       add_tooltip(
         function(g) {
@@ -917,7 +937,7 @@ server <- function (input, output){
 
   # Render table.
   output$outTable <- renderTable({
-    select(gradeAnalysisDF(), -EffectSizeColor)
+    select(gradeAnalysisDF(), -DiffSizeColor)
   })
   
 }
