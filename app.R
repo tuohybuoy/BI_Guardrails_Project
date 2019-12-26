@@ -4,8 +4,9 @@
 #
 # Shiny app to compare percentages of students earning particular grades
 # by course, by instructor, etc.
-# Use significance, power and effect size to give visual indicators of
-# likely differences and their magnitudes.
+# Leverage statistical power and significance to give visual indicators
+# of differences only when the data supports such a conclusion within
+# a selected degree of confidence.
 #########################################################################
 
 #----------------#
@@ -63,11 +64,10 @@ testType <- testTypeInitVal  # Placeholder for "Test Type" user input
 
 # Default colors for given magnitudes of difference between -100% and 100%.
 
-diffSizeScale <- c(-1.0, 1.0)
-diffColorScale <- c("#d1e5f0", "#fee0b6")
-
 diffSizeColors <- data.frame(DiffSize=seq(-1.0, 1.0, 0.01),
-                             DiffColor=colorRampPalette(c("#2166ac", "#4393c3", "#92c5de", "#d1e5f0", "#ffffff", "#fee0b6", "#fdb863", "#e08214", "#b35806"))(201),
+                             DiffColor=c(colorRampPalette(c("#2166ac", "#4393c3", "#92c5de", "#d1e5f0"))(100),
+                                                          "#ffffff",
+                                                          colorRampPalette(c("#fee0b6", "#fdb863", "#e08214", "#b35806"))(100)),
                              stringsAsFactors=FALSE)
 
 # Magnitudes and cutoffs for effect sizes.
@@ -85,9 +85,6 @@ effectSizeMagnitudes <- data.frame(EffectSizeMagnitude=c("NA", "Tiny", "Small", 
                                                      cohen.ES(test="p", size="medium")$effect.size,
                                                      cohen.ES(test="p", size="large")$effect.size),
                                    stringsAsFactors=FALSE)
-
-effectSizeExcludeChoice <- "NA"      # Don't show "NA" as a dropdown choice for effect sizes
-effectSizeDefaultChoice <- "Large"   # Default choice for Effect Size dropdown
 
 # Controls to help determine whether to auto-resize chart as selections change
 autoChartResize <- TRUE
@@ -141,7 +138,7 @@ mapDiff2Color <- function(diff, effectSize) {
   )
 }
 
-# Function to label effect sizes for chi-square goodness of fit tests.
+# Function to label effect sizes for goodness of fit tests.
 # Include sign to indicate direction of difference in a comparison:
 # smaller = negative, larger = positive
 
@@ -733,7 +730,7 @@ server <- function (input, output){
     names(filterVals) <- filterFields
     # Get grades of interest
     gradeVals <- input$Grades
-    # Get specified Alpha, Alpha adjustment, min desired effect size, and min a-priori power.
+    # Get specified Alpha, Alpha adjustment, and min observed power.
     alpha <- input$Alpha/100
     alphaAdjust <- input$AlphaAdjust
     minPower <- input$MinPower/100
