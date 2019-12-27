@@ -62,16 +62,29 @@ testTypes <- c("Auto", "Binomial Exact", "X2 Goodness of Fit", "X2 Independence"
 testTypeInitVal = "Binomial Exact"
 testType <- testTypeInitVal  # Placeholder for "Test Type" user input
 
-# Default colors for given magnitudes of difference between -100% and 100%.
+# Default colors and labels for given magnitudes of difference between -70% and 70%.
+# Show finer detail for small magnitudes.
 
-diffSizeColors <- data.frame(DiffSize=seq(-1.0, 1.0, 0.01),
-                             DiffColor=c(colorRampPalette(c("#2166ac", "#4393c3", "#92c5de", "#d1e5f0"))(100),
-                                                          "#ffffff",
-                                                          colorRampPalette(c("#fee0b6", "#fdb863", "#e08214", "#b35806"))(100)),
-                             stringsAsFactors=FALSE)
+diffBreaks <-c(seq(1, 5, 1), seq(10, 20, 5), seq(30, 70, 10))
 
-# Magnitudes and cutoffs for effect sizes.
-effectSizeMagnitudes <- data.frame(EffectSizeMagnitude=c("NA", "Tiny", "Small", "Medium", "Large"),
+diffSizeColorsLabels <- tibble(DiffSize=c(rev(-diffBreaks), 0, diffBreaks)) %>%
+                                    {
+                                      mutate(.,
+                                             # Blues for negative numbers, oranges for positive
+                                             DiffColor=c(colorRampPalette(c("#2166ac", "#4393c3", "#92c5de", "#d1e5f0"))(floor(nrow(.)/2)),
+                                                         "#ffffff",
+                                                         colorRampPalette(c("#fee0b6", "#fdb863", "#e08214", "#b35806"))(floor(nrow(.)/2))),
+                                             # Show labels as percentages.
+                                             # Zero and NA show the same color.
+                                             DiffLabel=paste0(as.character(.$DiffSize),
+                                                              "%",
+                                                              ifelse(.$DiffSize %in% c(min(.$DiffSize), max(.$DiffSize)), "+", ""),
+                                                              ifelse(.$DiffSize == 0, " / NA", ""))
+                                      )
+                                    }
+
+# Effect-size magnitudes and cutoffs.
+effectSizeMagnitudes <- tibble(EffectSizeMagnitude=c("NA", "Tiny", "Small", "Medium", "Large"),
                                    # Conventional cutoffs for chi-square effect sizes
                                    EffectSizeX2=c(-0.00001,
                                                   0.00001,
@@ -83,8 +96,7 @@ effectSizeMagnitudes <- data.frame(EffectSizeMagnitude=c("NA", "Tiny", "Small", 
                                                      0.00001,
                                                      cohen.ES(test="p", size="small")$effect.size,
                                                      cohen.ES(test="p", size="medium")$effect.size,
-                                                     cohen.ES(test="p", size="large")$effect.size),
-                                   stringsAsFactors=FALSE)
+                                                     cohen.ES(test="p", size="large")$effect.size))
 
 # Controls to help determine whether to auto-resize chart as selections change
 autoChartResize <- TRUE
@@ -114,10 +126,11 @@ rmNSDiffs <- function(diff, effectSize) {
   ifelse(is.na(effectSize), NA, diff)
 }
 
-# Constrain range of "diffs in % grades of interest" to the range with matching fill colors.
+# Map range of "diffs in % grades of interest" to the range with matching fill colors.
+# Convert to integer so match() function in next step will work with negative numbers.
 
-constrainDiff2ColorRange <- function(diff) {
-  round(pmax(pmin(diff, max(diffSizeColors$DiffSize)), min(diffSizeColors$DiffSize)), 2)
+mapDiff2ColorRange <- function(diff) {
+  pmax(pmin(as.integer(100*diff), max(diffSizeColorsLabels$DiffSize)), min(diffSizeColorsLabels$DiffSize))
 }
 
 # Return the colors that corresponds to particular differences in % selected grades.
@@ -126,15 +139,45 @@ mapDiff2Color <- function(diff, effectSize) {
   
   # Remove nonsignificant diffs.
   # Constrain remaining diffs to the available range of colors. Round to 2 decimals.
-  diff <- constrainDiff2ColorRange(rmNSDiffs(diff,effectSize))
+  diff <- mapDiff2ColorRange(rmNSDiffs(diff,effectSize))
   
   # Choose colors.
   case_when(
     # If diff is NA, color as middle gray.
-    is.na(diff) ~ diffSizeColors$DiffColor[ceiling(nrow(diffSizeColors)/2)],
+    is.na(diff) ~ diffSizeColorsLabels$DiffColor[ceiling(nrow(diffSizeColorsLabels)/2)],
+    
+    # If diff exactly matches a color point, return that.
+    (diff %in% diffSizeColorsLabels$DiffSize) ~ diffSizeColorsLabels$DiffColor[match(diff, diffSizeColorsLabels$DiffSize)],
 
-    # Else return matching color.
-    TRUE ~ diffSizeColors$DiffColor[findInterval(diff, diffSizeColors$DiffSize)]
+    # If diff is negative and not an exact match, return the bottom of the interval that contains it.
+    (sign(diff) == -1) ~ diffSizeColorsLabels$DiffColor[findInterval(diff, diffSizeColorsLabels$DiffSize) + 1],
+    
+    # Else if diff is positive and not an exact match, return the bottom of the containing interval.
+    TRUE ~ diffSizeColorsLabels$DiffColor[findInterval(diff, diffSizeColorsLabels$DiffSize)]
+  )
+}
+
+# Label diffs in % selected grades.
+
+labelDiffSizes <- function(diff, effectSize) {
+
+    # Remove nonsignificant diffs.
+  # Constrain remaining diffs to the available range of colors. Round to 2 decimals.
+  diff <- mapDiff2ColorRange(rmNSDiffs(diff,effectSize))
+  
+  # Choose colors.
+  case_when(
+    # If diff is NA, color as middle gray.
+    is.na(diff) ~ diffSizeColorsLabels$DiffLabel[ceiling(nrow(diffSizeColorsLabels)/2)],
+    
+    # If diff exactly matches a color point, return that.
+    (diff %in% diffSizeColorsLabels$DiffSize) ~ diffSizeColorsLabels$DiffLabel[match(diff, diffSizeColorsLabels$DiffSize)],
+    
+    # If diff is negative and not an exact match, return the bottom of the interval that contains it.
+    (sign(diff) == -1) ~ diffSizeColorsLabels$DiffLabel[findInterval(diff, diffSizeColorsLabels$DiffSize) + 1],
+    
+    # Else if diff is positive and not an exact match, return the bottom of the containing interval.
+    TRUE ~ diffSizeColorsLabels$DiffLabel[findInterval(diff, diffSizeColorsLabels$DiffSize)]
   )
 }
 
@@ -821,10 +864,11 @@ server <- function (input, output){
       gradeAnalysisDF <- X2IndependenceTest(gradeSummary, alpha, minPower)
     }
 
-    # Assign colors to diffs in % grades of interest.
-    # Assign size labels to effect sizes.
+    # Assign colors and labels to diffs in % grades of interest.
+    # Assign labels to effect sizes.
     gradeAnalysisDF %<>%
       mutate(DiffSizeColor = mapDiff2Color(`Diff in % Grades of Interest`, `Effect Size`),
+             `Difference from Others` = labelDiffSizes(`Diff in % Grades of Interest`, `Effect Size`),
              `Effect Size Magnitude` = labelEffectSizes(testType, `Effect Size`))
     
     # Return computations from the reactive block
@@ -842,6 +886,7 @@ server <- function (input, output){
                                  "Diff CI Lower Bound",
                                  "Diff CI Upper Bound",
                                  "DiffSizeColor",
+                                 "Difference from Others",
                                  "Statistical Significance Achieved",
                                  "Effect Size",
                                  "Effect Size Magnitude",
@@ -867,6 +912,7 @@ server <- function (input, output){
     # Generate symbols for chart items for use in GGVis' formula-type interface.
     xVar <- prop("x2", as.symbol("Prop Grades of Interest"))
     yVar <- prop("y", as.symbol(groupVal()))
+    fillVar <- prop("fill", as.symbol("Difference from Others"))
 
     # Create offset to make sure y-axis intersects with x-axis at x==0.
     yOffset <- scaled_value("x", 0)
@@ -876,7 +922,7 @@ server <- function (input, output){
       ggvis() %>%
       # Generate bars of bar chart.
       # For fill, use := to override default colors.
-      layer_rects(x=0, x2=xVar, y=yVar, height=band(), fill:=~DiffSizeColor) %>%
+      layer_rects(x=0, x2=xVar, y=yVar, height=band(), fill=fillVar) %>%
       add_axis("y", offset=yOffset, title="", grid=FALSE, tick_size_major=0, tick_padding=5,
                properties = axis_props(
                  labels = list(fontSize=12)
@@ -888,6 +934,9 @@ server <- function (input, output){
                  axis = list(stroke="white"),
                  labels = list(fontSize=0),
                  title = list(fontSize=14))) %>%
+      # Scale for diff colors and labels
+      scale_ordinal("fill", domain=diffSizeColorsLabels$DiffLabel,
+                    range=diffSizeColorsLabels$DiffColor) %>%
       # Function for interactive tooltips
       add_tooltip(
         function(g) {
@@ -934,7 +983,7 @@ server <- function (input, output){
 
   # Render table.
   output$outTable <- renderTable({
-    select(gradeAnalysisDF(), -DiffSizeColor)
+    select(gradeAnalysisDF(), -DiffSizeColor, -`Difference from Others`)
   })
   
 }
