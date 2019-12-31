@@ -65,23 +65,28 @@ testType <- testTypeInitVal  # Placeholder for "Test Type" user input
 # Default colors and labels for given magnitudes of difference between -70% and 70%.
 # Show finer detail for small magnitudes.
 
-diffBreaks <-c(seq(1, 5, 1), seq(10, 20, 5), seq(30, 70, 10))
+diffBreaks <-c(1, 5, seq(10, 20, 5), seq(30, 60, 10))
 
-diffSizeColorsLabels <- tibble(DiffSize=c(rev(-diffBreaks), 0, diffBreaks)) %>%
-                                    {
-                                      mutate(.,
-                                             # Blues for negative numbers, oranges for positive
-                                             DiffColor=c(colorRampPalette(c("#2166ac", "#4393c3", "#92c5de", "#d1e5f0"))(floor(nrow(.)/2)),
-                                                         "#ffffff",
-                                                         colorRampPalette(c("#fee0b6", "#fdb863", "#e08214", "#b35806"))(floor(nrow(.)/2))),
-                                             # Show labels as percentages.
-                                             # Zero and NA show the same color.
-                                             DiffLabel=paste0(as.character(.$DiffSize),
-                                                              "%",
-                                                              ifelse(.$DiffSize %in% c(min(.$DiffSize), max(.$DiffSize)), "+", ""),
-                                                              ifelse(.$DiffSize == 0, " / NA", ""))
-                                      )
-                                    }
+# Postive differences are bloe
+
+diffSizeColorsLabels <- tibble(DiffSize = diffBreaks) %>%
+{
+  mutate(., DiffColor = colorRampPalette(c("#d1e5f0", "#92c5de", "#4393c3", "#2166ac"))(nrow(.)),
+         DiffLabel = paste0(as.character(.$DiffSize),
+                            ifelse(.$DiffSize < max(.$DiffSize),
+                                   paste0("-", as.character(lead(.$DiffSize)-1)),
+                                   "+"),
+                            "%")
+  )
+}
+
+# Negative differences are orange, and zero/NA differences are white
+
+diffSizeColorsLabels <- tibble(DiffSize = rev(-diffBreaks),
+                               DiffColor = colorRampPalette(c("#b35806", "#e08214", "#fdb863", "#fee0b6"))(nrow(diffSizeColorsLabels)),
+                               DiffLabel = rev(paste0("-", diffSizeColorsLabels$DiffLabel))) %>%
+  add_row(DiffSize = 0.0, DiffColor = "#ffffff", DiffLabel = "NA") %>%
+  bind_rows(diffSizeColorsLabels)
 
 # Effect-size magnitudes and cutoffs.
 effectSizeMagnitudes <- tibble(EffectSizeMagnitude=c("NA", "Tiny", "Small", "Medium", "Large"),
@@ -158,26 +163,36 @@ mapDiff2Color <- function(diff, effectSize) {
 }
 
 # Label diffs in % selected grades.
+# This is parallel to the choice of color.
 
 labelDiffSizes <- function(diff, effectSize) {
 
-    # Remove nonsignificant diffs.
-  # Constrain remaining diffs to the available range of colors. Round to 2 decimals.
+  # Remove nonsignificant diffs.
+  # Constrain remaining diffs to the available range of labels. Round to 2 decimals.
   diff <- mapDiff2ColorRange(rmNSDiffs(diff,effectSize))
   
-  # Choose colors.
+  # Choose labels.
   case_when(
-    # If diff is NA, color as middle gray.
     is.na(diff) ~ diffSizeColorsLabels$DiffLabel[ceiling(nrow(diffSizeColorsLabels)/2)],
-    
-    # If diff exactly matches a color point, return that.
     (diff %in% diffSizeColorsLabels$DiffSize) ~ diffSizeColorsLabels$DiffLabel[match(diff, diffSizeColorsLabels$DiffSize)],
-    
-    # If diff is negative and not an exact match, return the bottom of the interval that contains it.
     (sign(diff) == -1) ~ diffSizeColorsLabels$DiffLabel[findInterval(diff, diffSizeColorsLabels$DiffSize) + 1],
-    
-    # Else if diff is positive and not an exact match, return the bottom of the containing interval.
     TRUE ~ diffSizeColorsLabels$DiffLabel[findInterval(diff, diffSizeColorsLabels$DiffSize)]
+  )
+}
+
+# To help display diffs as percentages.
+# When effect size is NA, display "NA".
+
+diffAsPercent <- function(diff, effectSize, effectSizeMagnitude) {
+  diff <- rmNSDiffs(diff, effectSize)
+  
+  ifelse(
+    is.na(diff),
+    "NA",
+    paste0(as.character(abs(round((diff * 100), digits=1))),
+           "% ",
+           ifelse(sign(diff) == 1, "Higher ", "Lower "),
+           "(", effectSizeMagnitude, ")")
   )
 }
 
@@ -204,10 +219,10 @@ labelEffectSizes <- function(testType, effectSizes) {
     { ifelse(is.na(.), "NA", .) }
   
   # Prepend effect size by sign (direction) of effect.
-  paste0(case_when(effectLabels == "NA" ~ "",
-                   effectSizes > 0 ~ "+ ",
-                   TRUE ~ "- "),
-         effectLabels)
+  # paste0(case_when(effectLabels == "NA" ~ "",
+  #                  effectSizes > 0 ~ "+ ",
+  #                  TRUE ~ "- "),
+  #        effectLabels)
 }
 
 
@@ -955,7 +970,11 @@ server <- function (input, output){
                    "<b>", percent(curRec$`Prop Grades of Interest`), "</b>",
                    sep=" ", collapse=""),
             paste0("Difference from Other ", groupVal(), "s: ",
-                   "<b>", curRec$`Effect Size Magnitude`, "</b>",
+                   "<b>",
+                   diffAsPercent(curRec$`Diff in % Grades of Interest`,
+                                 curRec$`Effect Size`,
+                                 curRec$`Effect Size Magnitude`),
+                   "</b>",
                    sep=" ", collapse=""),
             paste0("Difference Range: ", 
                    "<b>", as.character(abs(round(ifelse(curRec$`Diff CI Lower Bound` < 0 & curRec$`Diff CI Upper Bound` <= 0,
@@ -991,5 +1010,3 @@ server <- function (input, output){
 # Activate page
 
 shinyApp(ui = ui , server = server)
-
-
