@@ -103,6 +103,13 @@ effectSizeMagnitudes <- tibble(EffectSizeMagnitude=c("NA", "Tiny", "Small", "Med
                                                      cohen.ES(test="p", size="medium")$effect.size,
                                                      cohen.ES(test="p", size="large")$effect.size))
 
+# Labels and colors for effect sizes, with sign included.
+# The sign will indicate whether a given measure is smaller or larger in comparison to others.
+effectSizeColorsLabels <- tibble(EffectSizeLabel=c("- Large", "- Medium", "- Small", "- Tiny", "NA", "+ Tiny", "+ Small", "+ Medium", "+ Large"),
+                                   # Orange-blue diverging color palette, obtained from RColorBrewer site: http://colorbrewer2.org/
+                                   EffectSizeColor=c("#b35806", "#e08214", "#fdb863", "#fee0b6", "#ffffff", "#d1e5f0", "#92c5de", "#4393c3", "#2166ac"))
+
+
 # Controls to help determine whether to auto-resize chart as selections change
 autoChartResize <- TRUE
 pixelsPerBar <- 25
@@ -219,10 +226,10 @@ labelEffectSizes <- function(testType, effectSizes) {
     { ifelse(is.na(.), "NA", .) }
   
   # Prepend effect size by sign (direction) of effect.
-  # paste0(case_when(effectLabels == "NA" ~ "",
-  #                  effectSizes > 0 ~ "+ ",
-  #                  TRUE ~ "- "),
-  #        effectLabels)
+  paste0(case_when(effectLabels == "NA" ~ "",
+                   effectSizes > 0 ~ "+ ",
+                   TRUE ~ "- "),
+         effectLabels)
 }
 
 
@@ -722,7 +729,17 @@ ui <- fixedPage(
           # Alpha threshold
           sliderInput(inputId="Alpha", label="Max Chance of False Positive",
                       min=0.1, max=20, value=5, step=0.1, post="%"),
-          checkboxInput(inputId="AlphaAdjust", label="Adjust False Positive Test by Number of Groups", value=TRUE)
+          checkboxInput(inputId="AlphaAdjust", label="Adjust False Positive Test by Number of Groups",
+                        value=TRUE)
+        )
+      ),
+      inputPanel(
+        verticalLayout(
+          strong("Shade Differences By"),
+          # Whether to shade by diff in % grades of interest or by effect size.
+          radioButtons(inputId="ShadeBy", label=NULL,
+                       choices=c("Percentage" = "percent", "Effect Size" = "effectSize"),
+                       selected="percent", inline=TRUE)
         )
       ),
       width=3
@@ -754,11 +771,9 @@ server <- function (input, output){
     filterVals
   })
   
-  # Reactive: confidence level (given value of Alpha)
-  confLevel <- reactive({
-    paste0((100 - input$Alpha), "%", collapse="")
-  })
-  
+  # Reactive: whether to shade chart by diff in % grades of interest or by effect size
+  shadeBy <- reactive({ input$ShadeBy })
+
   # Reactives: titles and subtitles for charts and x-axes
   gradePlotXAxisTitle <- reactive({
     paste("Percentage of", paste0(input$Grades, collapse="/"), "Grades", sep=" ", collapse="")
@@ -774,6 +789,15 @@ server <- function (input, output){
   })
   subTitle <- reactive({
     paste(paste0(names(filterVals()),":"), filterVals(), sep=" ", collapse="; ")
+  })
+  # Reactives to show legend either as diff in % grades of interest or as effect size.
+  legendLabels <- reactive({
+    if (input$ShadeBy == "percent") diffSizeColorsLabels$DiffLabel
+    else effectSizeColorsLabels$EffectSizeLabel
+  })
+  legendColors <- reactive({
+    if (input$ShadeBy == "percent") diffSizeColorsLabels$DiffColor
+    else effectSizeColorsLabels$EffectSizeColor
   })
   
   # Reactive function to return grouped grade counts
@@ -792,6 +816,8 @@ server <- function (input, output){
     alpha <- input$Alpha/100
     alphaAdjust <- input$AlphaAdjust
     minPower <- input$MinPower/100
+    # Whether to color fill by diff in % grades of interest or by effect size.
+    # shadeBy <- input$ShadeBy
     
     # Group and filter the data as specified.
     
@@ -882,9 +908,10 @@ server <- function (input, output){
     # Assign colors and labels to diffs in % grades of interest.
     # Assign labels to effect sizes.
     gradeAnalysisDF %<>%
-      mutate(DiffSizeColor = mapDiff2Color(`Diff in % Grades of Interest`, `Effect Size`),
-             `Difference from Others` = labelDiffSizes(`Diff in % Grades of Interest`, `Effect Size`),
+      mutate(`Diff Size Label` = labelDiffSizes(`Diff in % Grades of Interest`, `Effect Size`),
              `Effect Size Magnitude` = labelEffectSizes(testType, `Effect Size`))
+    if (shadeBy()=="percent") gradeAnalysisDF$`Difference from Others` <- gradeAnalysisDF$`Diff Size Label`
+    else gradeAnalysisDF$`Difference from Others` <- gradeAnalysisDF$`Effect Size Magnitude`
     
     # Return computations from the reactive block
     
@@ -900,9 +927,9 @@ server <- function (input, output){
                                  "Diff in % Grades of Interest",
                                  "Diff CI Lower Bound",
                                  "Diff CI Upper Bound",
-                                 "DiffSizeColor",
-                                 "Difference from Others",
+                                  "Difference from Others",
                                  "Statistical Significance Achieved",
+                                 "Diff Size Label",
                                  "Effect Size",
                                  "Effect Size Magnitude",
                                  "Min Detectable Effect Size"))
@@ -936,7 +963,6 @@ server <- function (input, output){
     gradeAnalysisDF() %>%
       ggvis() %>%
       # Generate bars of bar chart.
-      # For fill, use := to override default colors.
       layer_rects(x=0, x2=xVar, y=yVar, height=band(), fill=fillVar) %>%
       add_axis("y", offset=yOffset, title="", grid=FALSE, tick_size_major=0, tick_padding=5,
                properties = axis_props(
@@ -950,8 +976,8 @@ server <- function (input, output){
                  labels = list(fontSize=0),
                  title = list(fontSize=14))) %>%
       # Scale for diff colors and labels
-      scale_ordinal("fill", domain=diffSizeColorsLabels$DiffLabel,
-                    range=diffSizeColorsLabels$DiffColor) %>%
+      scale_ordinal("fill", domain=legendLabels(),
+                    range=legendColors()) %>%
       # Function for interactive tooltips
       add_tooltip(
         function(g) {
@@ -1002,7 +1028,7 @@ server <- function (input, output){
 
   # Render table.
   output$outTable <- renderTable({
-    select(gradeAnalysisDF(), -DiffSizeColor, -`Difference from Others`)
+    select(gradeAnalysisDF(), -`Diff Size Label`, -`Difference from Others`)
   })
   
 }
