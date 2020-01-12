@@ -816,9 +816,7 @@ server <- function (input, output){
     alpha <- input$Alpha/100
     alphaAdjust <- input$AlphaAdjust
     minPower <- input$MinPower/100
-    # Whether to color fill by diff in % grades of interest or by effect size.
-    # shadeBy <- input$ShadeBy
-    
+
     # Group and filter the data as specified.
     
     # If no filtering of data needed
@@ -995,14 +993,14 @@ server <- function (input, output){
             paste0("Percentage of ", paste0(input$Grades, collapse="/"), " Grades: ",
                    "<b>", percent(curRec$`Prop Grades of Interest`), "</b>",
                    sep=" ", collapse=""),
-            paste0("Difference from Other ", groupVal(), "s: ",
+            paste0("Est. Difference from Other ", groupVal(), "s: ",
                    "<b>",
                    diffAsPercent(curRec$`Diff in % Grades of Interest`,
                                  curRec$`Effect Size`,
                                  curRec$`Effect Size Magnitude`),
                    "</b>",
                    sep=" ", collapse=""),
-            paste0("Difference Range: ", 
+            paste0("Diff. Within Specified Confidence: ", 
                    "<b>", as.character(abs(round(ifelse(curRec$`Diff CI Lower Bound` < 0 & curRec$`Diff CI Upper Bound` <= 0,
                                                         curRec$`Diff CI Upper Bound`,
                                                         curRec$`Diff CI Lower Bound`)  * 100, digits=1))), "% ",
