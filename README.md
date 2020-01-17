@@ -54,11 +54,11 @@ Past this start point, the Percentage Bar Chart Tool can compare dozens or hundr
 Here's what the Percentage Bar Chart Tool looks like:
 
 ![UIUC Grade Explorer with Inferential Guardrails - Start Page](common/images/App_Start_Page.png)
-*Examining differences in As awarded by different Chemistry instructors in Spring 2019*
+*Examining differences in As awarded in different Chemistry courses in Spring 2019*
 
 The tool uses a single dataset: the [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa) compiled by Prof. Wade Fagen-Ulmschneider, used here with his kind permission.
 
-The data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2019. Please see the end of this document for more information and descriptive statistics.
+The data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2019. Please see [below](#the-university-of-illinois-gpa-dataset) for more information and descriptive statistics.
 
 ### Use Cases
 
@@ -88,13 +88,21 @@ Any Business Intelligence tool can help explore these questions. The Percentage 
 
 ![Select Min Chance of Detecting Diff](common/images/Select_Min_Chance_of_Detecting_Diff.png)
 
-5) Choose *Max Chance of False Positive*, the maximum likelihood that a given difference is due to random chance when a "true" difference does not exist. This corresponds to the notion of statistical significance. The typical cutoff is 5%, and often lower. The lower the significance cutoff, the more the tool focuses on larger groups with larger differences that are less likely to be random.
+5) Choose *Max Chance of False Positive*, the maximum likelihood that a given difference is due to random chance when a "true" difference does not exist. This corresponds to the notion of statistical significance. The typical cutoff is 5%, and often lower. The lower the significance cutoff, the more the tool focuses on larger groups with larger differences that are less likely to be artifacts of random chance.
 
 ![Select Max Chance of False Positive](common/images/Select_Max_Chance_of_False_Positive.png)
 
 Normally, leave the *Adjust False Positive Test by Number of Groups* box checked. This adjusts the significance cutoff downward according to the number of groups (courses/instructors/etc.) in the chart. The goal is to reduce the chance that any of the multiple comparisons produces a false positive.
 
-6) View the results. The darker orange a group is, the less likely it is to award the selected grades than other groups in the chart. Blue indicates higher likelihood of awarding the selected grades.
+6) Choose whether to shade interesting differences by a) the difference in the percentage of selected grades or b) the statistical effect size.
+
+![Shade Differences By](common/images/Shade_Differences_By.png)
+
+"Percentage" indicates a group's difference in percent grades from all other groups in the chart combined. "Effect Size" colors groups according to conventional cutoffs for small, medium and large effect sizes, like so:
+
+![Effect Size Color Scale](common/images/Effect_Size_Scale.png)
+
+7) View the results. The darker orange a group is, the less likely it is to award the selected grades than other groups in the chart. Blue indicates higher likelihood of awarding the selected grades.
 
 ![View Group Differences](common/images/View_Group_Diffs.png)
 
@@ -102,26 +110,47 @@ Hover over each group to view its details: the number and percent of selected gr
 
 ![View Tooltip](common/images/View_Tooltip.png)
 
+The "Est. Difference from" row gives a point estimate for the difference between a group's grades and those of all other groups. In addition, the row shows an indicator for effect size and direction, such as "+ Medium".
+
+"Diff. Within Specified Confidence" indicates the likely range that contains the "true" difference, given "Max Chance of False Positive" settings in 5. Lowering the chance of a false positive gives a larger range.
+
 ### Examples
 
-1) What course subjects are significantly more (or less) likely to award As (or Fs) than the others?
+1) Beginning at a high level: which course subjects were significantly more (or less) likely to award A/A+ grades in Spring 2019?
 
 ![A Grade Percentages by Subject for Spring 2019](common/images/As_by_Subject.png)
-*Accountancy seemed marginally less likely to award As and A+s than other subjects. in the Spring 2019 semester.*
+*Chemistry was marginally less likely to award A and A+ grades than other subjects.*
 
-2) If a subject awards significantly more As, is it more or less likely to award significantly more Fs?
+2) If a subject awarded significantly fewer As in Spring 2019, was it likely to award significantly more Ds and Fs?
 
-![F Grade Percentages by Subject for Spring 2019](common/images/Fs_by_Subject.png)
-*Accountancy was also marginally less likely to award Fs than other subjects.*
+![D/F Grade Percentages by Subject for Spring 2019](common/images/Fs_by_Subject.png)
+*Chemistry was marginally more likely to award D and F grades.*
 
-3) Do Chemistry courses appear to have experienced grade inflation over time?
+3) Within a subject, which levels (first-year, second-year, etc.) awarded significantly more high grades or low grades in Spring 2019?
 
-![Chemistry Grade Inflation in Spring Semesters](common/images/Chemistry_Grade_Inflation.png)
-*Overall, Chemistry courses experienced a significant increase in the number of As and A+s awarded in fall semesters.*
+![Chemistry A Grade Percentages by Level for Spring 2019](common/images/As_by_Level.png)
 
-4) Which instructors of 100-level Chemistry courses award significantly more or fewer As than the rest?
+*100-level Chemistry courses were overall more likely to award As.*
 
-*Left as an exercise for the reader!*
+![Chemistry D/F Grade Percentages by Level for Spring 2019](common/images/Ds_Fs_by_Level.png)
+
+*Interestingly, 100-level Chem courses were also slightly more likely to award low grades than other levels.*
+
+4) Compare individual courses within a subject and level.
+
+![100-level Chemistry A Grade Percentages by Course for Spring 2019](common/images/As_by_Course.png)
+
+*Interesting! General Chemistry I and II awarded relatively few As, but their paired laboratory courses awarded significantly more As.*
+
+![100-level Chemistry D/F Grade Percentages by Course for Spring 2019](common/images/Ds_Fs_by_Course.png)
+
+*The pattern is reversed for D and F grades.*
+
+5) For a given course subject and level, has there been significant grade inflation over time?
+
+![100-level Chemistry A Grade Percentages by Year](common/images/Ds_Fs_by_Course.png)
+
+*The proportion of As awarded in 100-level Chemistry courses seems to have significantly increased between 2010 and 2013. However, some of this may be due to apparent issues with years of data prior to 2017.*
 
 ## Project Details
 
@@ -225,10 +254,6 @@ As noted [above](#statistical-power), the tool's use of post-hoc power analysis 
 This approach is still imperfect for the unavoidable reason that the course grades have already been awarded. The approach would also make the app more unwieldy and less general-purpose. All told, it might be better to discard power analysis altogether.
 
 ### Smaller Changes
-
-#### Offer a More Meaningful Effect-Size Scale
-
-The "small", "medium", "large" (and "tiny") effect sizes are based on general convention. It would be more meaningful to show grade differences in terms of percentages. With that approach, a continuous scale would offer more detail than the current discrete scale.
 
 #### Filter by Primary Instructor
 
