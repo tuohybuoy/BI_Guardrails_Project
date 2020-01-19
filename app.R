@@ -203,6 +203,24 @@ diffAsPercent <- function(diff, effectSize, effectSizeMagnitude) {
   )
 }
 
+diffRangeAsPercent <- function(lowerBound, upperBound, effectSize) {
+  lowerBound <- rmNSDiffs(lowerBound, effectSize)
+  
+  ifelse(
+    is.na(lowerBound),
+    "NA",
+    paste0(as.character(abs(round(ifelse(lowerBound < 0 & upperBound <= 0,
+                                         upperBound,
+                                         lowerBound)  * 100, digits=1))), "% ",
+           ifelse(lowerBound < 0 & upperBound > 0, "Lower", ""),
+           " to ",
+           as.character(abs(round(ifelse(lowerBound < 0 & upperBound <= 0,
+                                         lowerBound,
+                                         upperBound) * 100, digits=1))), "% ", 
+           ifelse(upperBound <= 0, "Lower", "Higher"))
+  )
+}
+
 # Function to label effect sizes for goodness of fit tests.
 # Include sign to indicate direction of difference in a comparison:
 # smaller = negative, larger = positive
@@ -1001,15 +1019,10 @@ server <- function (input, output){
                    "</b>",
                    sep=" ", collapse=""),
             paste0("Diff. Within Specified Confidence: ", 
-                   "<b>", as.character(abs(round(ifelse(curRec$`Diff CI Lower Bound` < 0 & curRec$`Diff CI Upper Bound` <= 0,
-                                                        curRec$`Diff CI Upper Bound`,
-                                                        curRec$`Diff CI Lower Bound`)  * 100, digits=1))), "% ",
-                   ifelse(curRec$`Diff CI Lower Bound` < 0 & curRec$`Diff CI Upper Bound` > 0, "Lower", ""),
-                   " to ",
-                   as.character(abs(round(ifelse(curRec$`Diff CI Lower Bound` < 0 & curRec$`Diff CI Upper Bound` <= 0,
-                                                 curRec$`Diff CI Lower Bound`,
-                                                 curRec$`Diff CI Upper Bound`) * 100, digits=1))), "% ", 
-                   ifelse(curRec$`Diff CI Upper Bound` <= 0, "Lower", "Higher"),
+                   "<b>", 
+                   diffRangeAsPercent(curRec$`Diff CI Lower Bound`,
+                                      curRec$`Diff CI Upper Bound`,
+                                      curRec$`Effect Size`),
                    "</b>",
                    sep=" ", collapse=""),
             sep="<br />"

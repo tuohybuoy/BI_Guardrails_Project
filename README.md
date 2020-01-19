@@ -3,7 +3,7 @@
 Part 1 of ?: The Percentage Bar Chart Tool
 ----------------------------------
 
-[Interact](https://tuohybuoy.shinyapps.io/uiuc_grade_explorer_with_inferential_guardrails) with the current application at [rstudio.shinyapps.io](https://rstudio.shinyapps.io).
+[Interact](https://tuohybuoy.shinyapps.io/uiuc_grade_explorer_with_inferential_guardrails) with the current Percentage Bar Chart Tool at [rstudio.shinyapps.io](https://rstudio.shinyapps.io).
 
 ## Intro
 
@@ -13,31 +13,31 @@ The strength of charts can also be their weakness. By themselves, charts are pow
 
 With a bar chart, audiences have to decide whether one bar is sufficiently long compared to its neighbors to be "different" from them. This leans heavily on the audience's gut feelings. Arguably, this is the opposite of the desired goal when using data to aid decisionmaking.
 
-Take the percentage bar chart. It's a useful tool for comparing proportions between groups of differing size. Here's an example where Prof. Richards gives As to 50 out of 100 students, and Dr. Doom gives As to 150 out of 500 students:
+Take the percentage bar chart. It's a useful tool for comparing proportions between groups of different sizes. Here's an example where Prof. Richards gives As to 50 out of 100 students, and Dr. Doom gives As to 150 out of 500 students:
 
-![Richards vs. Doom A Grades Awarded](common/images/Richards_vs_Doom_Grades.png)
+![Richards vs. Doom A Grades Awarded: 50/100 vs. 150/500](common/images/Richards_vs_Doom_Grades.png)
 
 It looks obvious that Prof. Richards, with fewer students, is more likely to award As than Dr Doom. 50% is certainly a higher proportion than 30%. But what if Richards only has ten students, or six? The chart doesn't help determine whether "50% vs. 30%" is still likely to be meaningful, or just a product of random chance. In fact, the chart actively impedes efforts to determine this by looking exactly like the case with 100 students vs. 500:
 
-![Richards vs. Doom A Grades Awarded](common/images/Richards_vs_Doom_Grades.png)
+![Richards vs. Doom A Grades Awarded: 3/6 vs. 150/500](common/images/Richards_vs_Doom_Grades.png)
 
 Workarounds exist, such as shading or setting bar thickness by the number of students for each instructor. However, they don't address the core issue that it's up to viewers to determine what differences are likely to be real.
 
 ### Inferential Statistics to the Rescue
 
-Statistical techniques can help pinpoint differences that are more likely to be meaningful. Those same techniques can give insight into how big or small a difference is likely to be. Even better, they allow a viewer to choose cutoffs for the level of certainty they desire.
+Statistical techniques can help pinpoint differences that are more likely to be meaningful. Those same techniques can give insight into how big or small a difference is likely to be. Even better, they allow a viewer to choose cutoffs for the level of certainty desired.
 
 This Percentage Bar Chart Tool uses four closely-related attributes to make these determinations:
 * *Sample size:* how many students does an instructor or group of instructors have?
 * *Effect size:* how big or small is the grade difference between one instructor and others?
 * *Statistical Significance:* how likely is the difference to be a false positive? The typically-applied cutoff is 5%.
-* *Statistical Power:* if an instructor has N students, what's the minimum chance that we could successfully identify a real grade difference from the other instructors, where the difference is a certain size? Typical cutoffs for this likelihood are 80%, 90% and 95%.
+* *Statistical Power:* if an instructor has N students, what's the minimum chance that we could successfully identify a real grade difference of a certain size? Typical cutoffs for this likelihood are 80%, 90% and 95%.
 
 (A rule of thumb: the smaller the difference between instructors, the more grades are required to identify the difference with a high degree of certainty).
 
 Starting with the percentages and sample sizes, the Percentage Bar Chart Tool calculates apparent differences in the form of effect sizes. Then the application highlights only those differences that meet selected thresholds for statistical significance and power. That is, the tool highlights those differences that are at least as likely to be genuine as the cutoffs demand.
 
-We should note that statistical significance isn't the same as real-world significance. A 1% difference in grades awarded might be real, but it's probably not meaningful. However, the tool labels differences as *Large*, *Medium*, *Small* or *Tiny* to help the viewer draw real-world conclusions. In addition, tooltips show the range that the "real" difference is likely to fall within. 
+We should note that statistical significance isn't the same as real-world significance. A 1% difference in As awarded might be real, but it's probably not meaningful. However, the tool labels differences as *Large*, *Medium*, *Small* or *Tiny* to help the viewer draw real-world conclusions. In addition, tooltips show the range that the "real" difference is likely to fall within. 
 
 For more details about the statistical tests employed, see [The Statistics](#the-statistics) below.
 
@@ -68,7 +68,7 @@ The tool can help investigate questions like these:
 * Within Chemistry, do 100-level or 200-level courses award more As than average?
 * Has there been significant grade inflation over time within Chemistry courses?
 
-Any Business Intelligence tool can help explore these questions. The Percentage Bar Chart adds value by indicating the size of differences that are likely to be non-random with a specified degree of confidence. This helps users focus on the differences that are more likely to be meaningful.
+Any Business Intelligence tool can help explore these questions. The Percentage Bar Chart adds value by indicating the size of differences that are likely to be non-random within a specified degree of confidence. This helps users focus on the differences that are more likely to be meaningful.
 
 ### Usage
 
@@ -110,9 +110,9 @@ Hover over each group to view its details: the number and percent of selected gr
 
 ![View Tooltip](common/images/View_Tooltip.png)
 
-The "Est. Difference from" row gives a point estimate for the difference between a group's grades and those of all other groups. In addition, the row shows an indicator for effect size and direction, such as "+ Medium".
+The "Est. Difference from" row gives a point estimate for the "true" difference between a group's grades and those of all other groups. In addition, the row shows an indicator for effect size and direction, such as "+ Medium".
 
-"Diff. Within Specified Confidence" indicates the likely range that contains the "true" difference, given "Max Chance of False Positive" settings in 5. Lowering the chance of a false positive gives a larger range.
+"Diff. Within Specified Confidence" indicates the likely range that contains the "true" difference, given the *Max Chance of False Positive* setting from step 5. Lowering the chance of a false positive gives a larger range.
 
 ### Examples
 
@@ -121,22 +121,22 @@ The "Est. Difference from" row gives a point estimate for the difference between
 ![A Grade Percentages by Subject for Spring 2019](common/images/As_by_Subject.png)
 *Chemistry was marginally less likely to award A and A+ grades than other subjects.*
 
-2) If a subject awarded significantly fewer As in Spring 2019, was it likely to award significantly more Ds and Fs?
+2) If Chemistry awarded significantly fewer As than other subjects in Spring 2019, was it likely to award significantly more Ds and Fs?
 
-![D/F Grade Percentages by Subject for Spring 2019](common/images/Fs_by_Subject.png)
-*Chemistry was marginally more likely to award D and F grades.*
+![D/F Grade Percentages by Subject for Spring 2019](common/images/Ds_Fs_by_Subject.png)
+*Chemistry was indeed marginally more likely to award D and F grades.*
 
-3) Within a subject, which levels (first-year, second-year, etc.) awarded significantly more high grades or low grades in Spring 2019?
+3) Which Chemistry levels (100, 200, etc.) awarded significantly more high grades or low grades in Spring 2019?
 
 ![Chemistry A Grade Percentages by Level for Spring 2019](common/images/As_by_Level.png)
 
-*100-level Chemistry courses were overall more likely to award As.*
+*100-level Chemistry courses were overall more likely to award As than other levels.*
 
 ![Chemistry D/F Grade Percentages by Level for Spring 2019](common/images/Ds_Fs_by_Level.png)
 
 *Interestingly, 100-level Chem courses were also slightly more likely to award low grades than other levels.*
 
-4) Compare individual courses within a subject and level.
+4) Drill down into 100-level Chemistry courses. What are the patterns of high and low grades?
 
 ![100-level Chemistry A Grade Percentages by Course for Spring 2019](common/images/As_by_Course.png)
 
@@ -146,11 +146,11 @@ The "Est. Difference from" row gives a point estimate for the difference between
 
 *The pattern is reversed for D and F grades.*
 
-5) For a given course subject and level, has there been significant grade inflation over time?
+5) Has 100-level Chemistry experienced significant grade inflation over time?
 
-![100-level Chemistry A Grade Percentages by Year](common/images/Ds_Fs_by_Course.png)
+![100-level Chemistry A Grade Percentages by Year](common/images/As_by_Year.png)
 
-*The proportion of As awarded in 100-level Chemistry courses seems to have significantly increased between 2010 and 2013. However, some of this may be due to apparent issues with years of data prior to 2017.*
+*The proportion of As awarded in 100-level Chemistry courses seems to have significantly increased between 2010 and 2013. However, issues with Spring 2012 data may be confounding the results for that year -- see the next section.*
 
 ## Project Details
 
@@ -184,7 +184,7 @@ For each group in a chart, the tool runs an [exact binomial test](https://en.wik
 
 For example, if the chart shows As earned in Chemistry courses: the tool compares the percentage of As in CHEM 101 against the percentage in CHEM 102 through 584 combined. The tool then compares CHEM 102 against CHEM 101 plus 103 - 584 combined, and so on.
 
-The binomial test is convenient because it gives exact p-values for groups with small numbers of grades, unlike a parametric chi-square test which uses a theoretical distribution. Against this dataset, the binomial test runs about as fast as a chi-square test -- so there's no sacrifice in speed.
+The binomial test is convenient because it gives exact p-values for groups with small numbers of grades, unlike a chi-square test which uses a theoretical distribution. Against this dataset, the binomial test runs about as fast as a chi-square test -- so there's no sacrifice in speed.
 
 #### Approach
 
@@ -204,9 +204,11 @@ The Bonferroni correction is considered overly conservative when the multiple te
 
 As far as identifying "true positives" goes, the tool runs into a basic problem. Normally, researchers conduct power analysis to determine how much sample data they require to detect an effect of an anticipated size. This tool doesn't have that luxury, since course grades have already been awarded. Furthermore, the tool looks for effects of any size, not an anticipated size.
 
-Instead, the tool performs a kind of post-hoc power analysis. For each group in a chart, the tool computes the smallest "true" effect that could be detected at or above the specified power threshold. Then, if the group shows an effect of at least that size, it's displayed onscreen.
+Instead, the tool performs a kind of post-hoc power analysis. For each group in a chart, the tool computes the smallest "true" effect that could be detected at or above the specified power threshold. Then, if the group shows an effect of at least that size, the effect is displayed onscreen.
 
-One contrary argument is that using observed power is just a different way of using p-values. A more fundamental argument is that controlling for Type II error is only meaningful before any data is collected, which is the only point it's acceptable to assume that the null hypothesis is false. At least the Percentage Bar Chart Tool is far from alone in the way is misuses power analysis!
+One contrary argument is that using observed power is just a different way of using p-values. A more fundamental argument is that controlling for Type II error is only meaningful before any data is collected, which is the only point it's acceptable to assume that the null hypothesis is false.
+
+On the other hand, since power analysis tests sufficiency of sample size, it's indispensable to this tool.
 
 #### Effect Size
 
@@ -235,7 +237,7 @@ It might be shorter to list the work that's *not* left to do. Nevertheless, here
 
 If a viewer is curious about the differences between certain courses, it would be handy to be able to view the instructors for just those courses and get a sense of their habits in awarding grades. It would also be handy to look at grading patterns in those courses over time and check whether they might be related to changes in the instructors teaching the courses.
 
-This could be accomplished with a dashboard, with predictive models (given sufficient data), or both.
+This could be accomplished with a dashboard or with predictive models (given sufficient data).
 
 #### Incorporate the UIUC Course Catalog and Instructor CVs
 
@@ -251,7 +253,7 @@ Not everyone is interested in grades awarded by a midwestern US university, but 
 
 As noted [above](#statistical-power), the tool's use of post-hoc power analysis is flawed, perhaps fundamentally flawed. A sounder option would be to prompt the user for a desired effect size, then to compute the minimum required sample size. The tool would then test only the groups above that size threshold -- and only display whether the *anticipated* effect size was found, rather than any resulting effect size.
 
-This approach is still imperfect for the unavoidable reason that the course grades have already been awarded. The approach would also make the app more unwieldy and less general-purpose. All told, it might be better to discard power analysis altogether.
+This approach is still imperfect for the unavoidable reason that the course grades have already been awarded. The approach would also make the app more unwieldy and less general-purpose.
 
 ### Smaller Changes
 
@@ -264,6 +266,10 @@ The full instructor list is too extensive for a single dropdown control. However
 The filter controls currently show all values in the dataset, which makes it easy to choose filter combinations that match no data. For example, it's possible to filter the data to Fall 2019 courses and get an empty chart because no data is available.
 
 The remedy is to populate the filter dropdowns dynamically with selections that match at least one data point. Business-intelligence tools like Tableau can do this automatically, but R and Shiny require custom code to make this work.
+
+#### Include Links to Course, Subject and Instructor Webpages
+
+If the tool doesn't doesn't directly include course or instructor background information in the analysis, it could at least provide links to that information for interested users.
 
 ## Handy Links
 

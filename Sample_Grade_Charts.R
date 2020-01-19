@@ -148,6 +148,6 @@ ggplot(sampleProfGrades, aes(x=profName, y=propAGrades,
   guides(fill = guide_legend(nrow=1, override.aes = list(size=5))) +
   theme(legend.position="bottom") +
   labs(title="% As Awarded by Instructor",
-    x="", y="% A Grades", fill="Difference from Other")
+    x="", y="% A Grades", fill="Difference")
 
 
