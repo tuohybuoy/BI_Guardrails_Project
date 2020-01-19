@@ -114,7 +114,7 @@ effectSizeColorsLabels <- tibble(EffectSizeLabel=c("- Large", "- Medium", "- Sma
 autoChartResize <- TRUE
 pixelsPerBar <- 25
 pixelsHeaderFooter <- 75
-minChartHeight <- 500
+minChartHeight <- 400
 chartHeightInitVal <- 725  # Height of chart in pixels
 
 # Clone the input data for each filter field.
