@@ -106,7 +106,7 @@ Normally, leave the *Adjust False Positive Test by Number of Groups* box checked
 
 ![View Group Differences](common/images/View_Group_Diffs.png)
 
-Hover over each group to view its details: the number and percent of selected grades awarded, plus the size and range of any detected difference from other groups in the chart.
+8) Hover over each group to view its details: the number and percent of selected grades awarded, plus the size and range of any detected difference from other groups in the chart.
 
 ![View Tooltip](common/images/View_Tooltip.png)
 
@@ -140,7 +140,7 @@ The "Est. Difference from" row gives a point estimate for the "true" difference 
 
 ![100-level Chemistry A Grade Percentages by Course for Spring 2019](common/images/As_by_Course.png)
 
-*Interesting! General Chemistry I and II awarded relatively few As, but their paired laboratory courses awarded significantly more As.*
+*General Chemistry I and II awarded relatively few As, but their paired laboratory courses awarded significantly more As.*
 
 ![100-level Chemistry D/F Grade Percentages by Course for Spring 2019](common/images/Ds_Fs_by_Course.png)
 
@@ -266,10 +266,6 @@ The full instructor list is too extensive for a single dropdown control. However
 The filter controls currently show all values in the dataset, which makes it easy to choose filter combinations that match no data. For example, it's possible to filter the data to Fall 2019 courses and get an empty chart because no data is available.
 
 The remedy is to populate the filter dropdowns dynamically with selections that match at least one data point. Business-intelligence tools like Tableau can do this automatically, but R and Shiny require custom code to make this work.
-
-#### Include Links to Course, Subject and Instructor Webpages
-
-If the tool doesn't doesn't directly include course or instructor background information in the analysis, it could at least provide links to that information for interested users.
 
 ## Handy Links
 
