@@ -30,7 +30,7 @@ Statistical techniques can help pinpoint differences that are more likely to be 
 This Percentage Bar Chart Tool uses four closely-related attributes to make these determinations:
 * *Sample size:* how many students does an instructor or group of instructors have?
 * *Effect size:* how big or small is the grade difference between one instructor and others?
-* *Statistical Significance:* how likely is the difference to be a false positive? The typically-applied cutoff is 5%.
+* *Statistical Significance:* if two instructors award grades essentially the same way, how likely is it that we'll see a single difference large enough to lead us to the opposite conclusion? The typically-applied cutoff is 5%.
 * *Statistical Power:* if an instructor has N students, what's the minimum chance that we could successfully identify a real grade difference of a certain size? Typical cutoffs for this likelihood are 80%, 90% and 95%.
 
 (A rule of thumb: the smaller the difference between instructors, the more grades are required to identify the difference with a high degree of certainty).
