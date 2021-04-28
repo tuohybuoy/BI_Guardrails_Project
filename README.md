@@ -54,11 +54,11 @@ Past this start point, the Percentage Bar Chart Tool can compare dozens or hundr
 Here's what the Percentage Bar Chart Tool looks like:
 
 ![UIUC Grade Explorer with Inferential Guardrails - Start Page](common/images/App_Start_Page.png)
-*Examining differences in As awarded in different Chemistry courses in Spring 2019*
+*Examining differences in As awarded in different Chemistry courses in Spring 2020*
 
 The tool uses a single dataset: the [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa) compiled by Prof. Wade Fagen-Ulmschneider, used here with his kind permission.
 
-The data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2019. Please see [below](#the-university-of-illinois-gpa-dataset) for more information and descriptive statistics.
+The data summarizes letter grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2020. Please see [below](#the-university-of-illinois-gpa-dataset) for more information and descriptive statistics.
 
 ### Use Cases
 
@@ -151,6 +151,32 @@ The "Est. Difference from" row gives a point estimate for the "true" difference 
 ![100-level Chemistry A Grade Percentages by Year](common/images/As_by_Year.png)
 
 *The proportion of As awarded in 100-level Chemistry courses seems to have significantly increased between 2010 and 2013. However, issues with Spring 2012 data may be confounding the results for that year -- see the next section.*
+
+### Timeless Caveat
+
+As with any data analysis, consider the context before interpreting results. To illustrate, let's look at Computer Science grades from spring 2020, the first semester that higher education dealt with COVID-19.
+
+Suppose we wanted to determine whether COVID led to grade inflation in Computer Science courses. At first glance, it looks as though this might have been the case:
+
+![Computer Science Grades for Spring Terms Up to 2020](common/images/CS_Spring_As_by_Year.png)
+
+There appears to be a significant jump in the percentage of As awarded in 2020, apart from an increasing trend in previous years.
+
+Let's take a closer look at the number of As awarded in spring 2020:
+
+![Computer Science As Awarded Spring 2020](common/images/CS_As_2020_Tooltip.png)
+
+And compare to spring 2019:
+
+![Computer Science As Awarded Spring 2019](common/images/CS_As_2019_Tooltip.png)
+
+There were almost 600 fewer As awarded in 2020, despite the fact that they constitute a higher percentage of total letter grades. This must mean there are even fewer A-,B+ and below grades in 2020 compared to 2019. A quick check with the BI Guardrails Tool shows that's the case: 2548 such grades in 2020 compared to 4528 in 2019. What is going on?
+
+It's true that instructors were encouraged to be more accommodating as students and colleagues dealt with the effects of COVID, lockdown and hastily-improvised online instruction. There's more to the story, though.
+
+Students were also given unprecedented leeway to opt for credit/no-credit grades instead of standard letter grades like A and B. Students were even free to opt for credit/no-credit in their major courses, which had never been allowed before.
+
+Fact: the U of I GPA Dataset only includes letter grades and excludes credit/no-credit. This means we can't completely gauge the effect of COVID on course grades. However, we can say that the 2020 students who opted to keep letter grades were more likely to be very high-performing.
 
 ## Project Details
 
