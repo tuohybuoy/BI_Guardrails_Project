@@ -11,15 +11,13 @@ Part 1 of ?: The Percentage Bar Chart Tool
 
 The strength of charts can also be their weakness. By themselves, charts are powerful tools for summarizing large amounts of data. However, the audience is often left to determine what conclusions to draw from the chart. This is especially true with exploratory charts, where the designer hasn't stated any conclusions.
 
-With a bar chart, audiences have to decide whether one bar is sufficiently long compared to its neighbors to be "different" from them. This leans heavily on the audience's gut feelings. Arguably, this is the opposite of the desired goal when using data to aid decisionmaking.
+With a bar chart, audiences have to decide whether each bar is "different enough" from its neighbors. This leans heavily on the audience's gut feelings. Arguably, this is the opposite of the desired goal when using data to aid decisionmaking.
 
-Take the percentage bar chart. It's a useful tool for comparing proportions between groups of different sizes. Here's an example where Prof. Richards gives As to 50 out of 100 students, and Dr. Doom gives As to 150 out of 500 students:
+Take the percentage bar chart. It's a useful tool for comparing proportions between groups of different sizes. Here's an example where Prof. Richards gives As to 50 out of 100 students, Dr. Doom gives As to 150 out of 500 students, and Mr. Kent gives As to 8 out of 10 students:
 
-![Richards vs. Doom A Grades Awarded: 50/100 vs. 150/500](common/images/Richards_vs_Doom_Grades.png)
+![Richards vs. Doom vs. Kent A Grades Awarded: 50/100 vs. 150/500 vs. 8/10](common/images/Sample_Prof_Grades_No_Effect_Size.png)
 
-It looks obvious that Prof. Richards, with fewer students, is more likely to award As than Dr Doom. 50% is certainly a higher proportion than 30%. But what if Richards only has ten students, or six? The chart doesn't help determine whether "50% vs. 30%" is still likely to be meaningful, or just a product of random chance. In fact, the chart actively impedes efforts to determine this by looking exactly like the case with 100 students vs. 500:
-
-![Richards vs. Doom A Grades Awarded: 3/6 vs. 150/500](common/images/Richards_vs_Doom_Grades.png)
+It looks obvious that Prof. Richards, with fewer students, is more likely to award As than Dr. Doom. 50% is certainly a higher proportion than 30%. But what about Mr. Kent, who only has ten students but awarded 80% of them As? The chart doesn't tell us if the difference is meaningful. In fact, may be misleading us since it doesn't indicate that the high percentage is based on a low number of grades.
 
 Workarounds exist, such as shading or setting bar thickness by the number of students for each instructor. However, they don't address the core issue that it's up to viewers to determine what differences are likely to be real.
 
@@ -43,9 +41,11 @@ For more details about the statistical tests employed, see [The Statistics](#the
 
 A simple version of such a chart might look like this:
 
-![Richards vs. Doom A Grades Awarded, with Effect Size](common/images/Richards_vs_Doom_Grades_with_Effect_Size.png)
+![Richards vs. Doom vs. Kent A Grades Awarded, with Effect Size](common/images/Sample_Prof_Grades_with_Effect_Size.png)
 
-Past this start point, the Percentage Bar Chart Tool can compare dozens or hundreds of instructors or courses. This makes it potentially useful even for subject matter experts, who might otherwise be hard-pressed to digest this volume of information.
+Returning to our toy example, it looks more apparent that Richards is significantly more likely to award As than Doom. The color scale gives some idea of how statistically different they are. And Kent, with a higher proportion of As than either of them, is grayed out due to lack of sufficient grades to draw conclusions from.
+
+Past this simple start point, the Percentage Bar Chart Tool can compare dozens or hundreds of instructors or courses. This makes it potentially useful even for subject matter experts, who might otherwise be hard-pressed to digest this volume of information.
 
 ## The Tool
 

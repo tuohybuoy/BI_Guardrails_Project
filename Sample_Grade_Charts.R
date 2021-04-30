@@ -13,12 +13,12 @@ library(foreach)
 
 # Basic percentage bar chart
 
-sampleProfGrades <- tibble(profName = c("Reed Richards", "Doctor Doom"),
-                           profStudents = c(100, 500),
-                           propAGrades = c(0.5, 0.3))
+sampleProfGrades <- tibble(profName = c("Reed Richards", "Doctor Doom", "Clark Kent"),
+                           profStudents = c(100, 500, 10),
+                           propAGrades = c(0.5, 0.3, 0.8))
 
 ggplot(sampleProfGrades, aes(x=profName, y=propAGrades, fill=profName)) +
-  geom_bar(stat="identity", fill="darkgray") +
+  geom_bar(stat="identity", fill="#d7d7d7") +
   scale_x_discrete(limits=levels(as.factor(sampleProfGrades$profName))) +
 scale_y_continuous(labels = scales::percent, expand=c(0, 0), limits=c(0,1)) +
   coord_flip() +
@@ -88,7 +88,7 @@ sampleProfGrades <- foreach(gradeRow=iter(sampleProfGrades, by="row"),
 # Chart grade comparison with discrete effect size shown.
 
 # Define colors and labels for effect size.
-EffectSizeColor = c("#b35806", "#e08214", "#fdb863", "#fee0b6", "#f7f7f7", "#d1e5f0", "#92c5de", "#4393c3", "#2166ac")
+EffectSizeColor = c("#b35806", "#e08214", "#fdb863", "#fee0b6", "#e7e7e7", "#d1e5f0", "#92c5de", "#4393c3", "#2166ac")
 EffectSizeLabel = c("- Large", "- Medium", "- Small", "- Tiny", "NA", "+ Tiny", "+ Small", "+ Medium", "+ Large")
 names(EffectSizeColor) <- EffectSizeLabel
 
