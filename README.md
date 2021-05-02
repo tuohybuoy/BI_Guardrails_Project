@@ -11,24 +11,30 @@ Part 1 of ?: The Percentage Bar Chart Tool
 
 The strength of charts can also be their weakness. By themselves, charts are powerful tools for summarizing large amounts of data. However, the audience is often left to determine what conclusions to draw from the chart. This is especially true with exploratory charts, where the designer hasn't stated any conclusions.
 
-With a bar chart, audiences have to decide whether each bar is "different enough" from its neighbors. This leans heavily on the audience's gut feelings. Arguably, this is the opposite of the desired goal when using data to aid decisionmaking.
+With a bar chart, audiences have to decide whether each bar is "different enough" from its neighbors to be interesting. This leans heavily on the audience's gut feelings. Arguably, this is the opposite of the desired goal when using data to aid decisionmaking.
 
-Take the percentage bar chart. It's a useful tool for comparing proportions between groups of different sizes. Here's an example where Prof. Richards gives As to 50 out of 100 students, Dr. Doom gives As to 150 out of 500 students, and Mr. Kent gives As to 8 out of 10 students:
+Take the percentage bar chart. It's a useful tool for comparing proportions between groups of different sizes. Here's an example that compares how likely three instructors are to award A grades. Prof. Richards gives As to 50 out of 100 students, Dr. Doom gives As to 150 out of 500 students, and Mr. Kent gives As to 8 out of 10 students:
 
 ![Richards vs. Doom vs. Kent A Grades Awarded: 50/100 vs. 150/500 vs. 8/10](common/images/Sample_Prof_Grades_No_Effect_Size.png)
 
-It looks obvious that Prof. Richards, with fewer students, is more likely to award As than Dr. Doom. 50% is certainly a higher proportion than 30%. But what about Mr. Kent, who only has ten students but awarded 80% of them As? The chart doesn't tell us if the difference is meaningful. In fact, may be misleading us since it doesn't indicate that the high percentage is based on a low number of grades.
+It looks obvious that Prof. Richards is more likely to award As than Dr. Doom. 50% is certainly a higher proportion than 30%. But it looks even more obvious that Mr. Kent awards more As than either of them. The chart may be misleading us on Kent, since it doesn't indicate that the high percentage is based on a low number of grades.
 
 Workarounds exist, such as shading or setting bar thickness by the number of students for each instructor. However, they don't address the core issue that it's up to viewers to determine what differences are likely to be real.
 
 ### Inferential Statistics to the Rescue
 
-Statistical techniques can help pinpoint differences that are more likely to be meaningful. Those same techniques can give insight into how big or small a difference is likely to be. Even better, they allow a viewer to choose cutoffs for the level of certainty desired.
+Returning to our toy example, an improved chart might look like this:
 
-This Percentage Bar Chart Tool uses four closely-related attributes to make these determinations:
+![Richards vs. Doom vs. Kent A Grades Awarded, with Effect Size](common/images/Sample_Prof_Grades_with_Effect_Size.png)
+
+It looks more apparent that Richards is significantly more likely to award As than Doom. The color scale gives some idea of how statistically different they are. And Kent, with a higher proportion of As than either of them, is grayed out due to lack of sufficient grades to draw firm conclusions from.
+
+The second chart draws on statistical techniques to help pinpoint differences that are more likely to be meaningful. Those same techniques can give insight into how big or small a difference is likely to be. Even better, they allow a viewer to choose cutoffs for the level of certainty desired.
+
+The Percentage Bar Chart Tool uses four closely-related attributes to make these determinations:
 * *Sample size:* how many students does an instructor or group of instructors have?
 * *Effect size:* how big or small is the grade difference between one instructor and others?
-* *Statistical Significance:* if two instructors award grades essentially the same way, how likely is it that we'll see a single difference large enough to lead us to the opposite conclusion? The typically-applied cutoff is 5%.
+* *Statistical Significance:* if two instructors award grades essentially the same way, how likely is it that we'll see a grade sample large enough to lead us to the opposite conclusion? The typically-applied cutoff is 5%.
 * *Statistical Power:* if an instructor has N students, what's the minimum chance that we could successfully identify a real grade difference of a certain size? Typical cutoffs for this likelihood are 80%, 90% and 95%.
 
 (A rule of thumb: the smaller the difference between instructors, the more grades are required to identify the difference with a high degree of certainty).
@@ -39,13 +45,7 @@ We should note that statistical significance isn't the same as real-world signif
 
 For more details about the statistical tests employed, see [The Statistics](#the-statistics) below.
 
-A simple version of such a chart might look like this:
-
-![Richards vs. Doom vs. Kent A Grades Awarded, with Effect Size](common/images/Sample_Prof_Grades_with_Effect_Size.png)
-
-Returning to our toy example, it looks more apparent that Richards is significantly more likely to award As than Doom. The color scale gives some idea of how statistically different they are. And Kent, with a higher proportion of As than either of them, is grayed out due to lack of sufficient grades to draw conclusions from.
-
-Past this simple start point, the Percentage Bar Chart Tool can compare dozens or hundreds of instructors or courses. This makes it potentially useful even for subject matter experts, who might otherwise be hard-pressed to digest this volume of information.
+Beyond the simple 3-instructor comparison above, the Percentage Bar Chart Tool can compare dozens or hundreds of instructors or courses. This makes it potentially useful even for subject matter experts, who might otherwise be hard-pressed to digest this volume of information.
 
 ## The Tool
 
@@ -63,10 +63,10 @@ The data summarizes letter grades awarded at the [Champaign-Urbana campus of the
 ### Use Cases
 
 The tool can help investigate questions like these:
-* Does Sociology award significantly more As than other subjects, and does Chemistry award significantly less?
+* Does Chemistry award significantly fewer grades than other subjects?
 * If a subject awards fewer As, does it necessarily award more Ds and Fs?
 * Within Chemistry, do 100-level or 200-level courses award more As than average?
-* Has there been significant grade inflation over time within Chemistry courses?
+* Has Chemistry experienced significant grade inflation over time?
 
 Any Business Intelligence tool can help explore these questions. The Percentage Bar Chart adds value by indicating the size of differences that are likely to be non-random within a specified degree of confidence. This helps users focus on the differences that are more likely to be meaningful.
 
@@ -80,7 +80,7 @@ Any Business Intelligence tool can help explore these questions. The Percentage 
 
 ![Group Grades By](common/images/Group_Grades_By.png)
 
-3) Filter the results to focus on particular years, terms, subjects or course levels. For example, choose Subject "Chemistry" or "Sociology" to focus on those topics. Choose Level "100" to focus on Freshman-level courses.
+3) Filter the results to focus on particular years, terms, subjects or course levels. For example, choose Subject "Chemistry" or "Sociology" to focus on those topics, and choose Level "100" to focus on Freshman-level courses.
 
 ![Filter Grades By](common/images/Filter_Grades_By.png)
 
@@ -88,7 +88,7 @@ Any Business Intelligence tool can help explore these questions. The Percentage 
 
 ![Select Min Chance of Detecting Diff](common/images/Select_Min_Chance_of_Detecting_Diff.png)
 
-5) Choose *Max Chance of False Positive*, the maximum likelihood that a given difference is due to random chance when a "true" difference does not exist. This corresponds to the notion of statistical significance. The typical cutoff is 5%, and often lower. The lower the significance cutoff, the more the tool focuses on larger groups with larger differences that are less likely to be artifacts of random chance.
+5) Choose *Max Chance of False Positive*, the maximum acceptable chance that a random difference may appear significant when a "true" difference does not exist. This corresponds to the notion of statistical significance. The typical cutoff is 5%, and often lower. The lower the significance cutoff, the more the tool focuses on larger groups with larger differences that are less likely to be artifacts of random chance.
 
 ![Select Max Chance of False Positive](common/images/Select_Max_Chance_of_False_Positive.png)
 
@@ -102,7 +102,7 @@ Normally, leave the *Adjust False Positive Test by Number of Groups* box checked
 
 ![Effect Size Color Scale](common/images/Effect_Size_Scale.png)
 
-7) View the results. The darker orange a group is, the less likely it is to award the selected grades than other groups in the chart. Blue indicates higher likelihood of awarding the selected grades.
+7) View the results. The darker orange a group is, the less likely it is to award the selected grades than other groups in the chart. Blue indicates higher likelihood of awarding the selected grades. White ("NA") indicates groups where the difference and/or sample size don't meet the selected confidence threshold.
 
 ![View Group Differences](common/images/View_Group_Diffs.png)
 
@@ -146,49 +146,43 @@ The "Est. Difference from" row gives a point estimate for the "true" difference 
 
 *The pattern is reversed for D and F grades.*
 
-5) Has 100-level Chemistry experienced significant grade inflation over time?
-
-![100-level Chemistry A Grade Percentages by Year](common/images/As_by_Year.png)
-
-*The proportion of As awarded in 100-level Chemistry courses seems to have significantly increased between 2010 and 2013. However, issues with Spring 2012 data may be confounding the results for that year -- see the next section.*
-
 ### Timeless Caveat
 
-As with any data analysis, consider the context before interpreting results. To illustrate, let's look at Computer Science grades from spring 2020, the first semester that higher education dealt with COVID-19.
+As with any data analysis, consider the context before interpreting results. To illustrate, let's look at Computer Science grades from Spring 2020, the first semester that higher education dealt with COVID-19.
 
 Suppose we wanted to determine whether COVID led to grade inflation in Computer Science courses. At first glance, it looks as though this might have been the case:
 
 ![Computer Science Grades for Spring Terms Up to 2020](common/images/CS_Spring_As_by_Year.png)
 
-There appears to be a significant jump in the percentage of As awarded in 2020, apart from an increasing trend in previous years.
+There appears to be a significant jump in the percentage of As awarded in 2020, apart from an increasing trend in previous spring semesters.
 
-Let's take a closer look at the number of As awarded in spring 2020:
+Let's take a closer look at the number of As awarded in Spring 2020:
 
 ![Computer Science As Awarded Spring 2020](common/images/CS_As_2020_Tooltip.png)
 
-And compare to spring 2019:
+And compare to Spring 2019:
 
 ![Computer Science As Awarded Spring 2019](common/images/CS_As_2019_Tooltip.png)
 
-There were almost 600 fewer As awarded in 2020, despite the fact that they constitute a higher percentage of total letter grades. This must mean there are even fewer A-,B+ and below grades in 2020 compared to 2019. A quick check with the BI Guardrails Tool shows that's the case: 2548 such grades in 2020 compared to 4528 in 2019. What is going on?
+There were almost 600 fewer As awarded in 2020, while they constituted a higher percentage of total letter grades. This must mean there are even fewer A-,B+ and below grades in 2020 compared to 2019. A quick check with the BI Guardrails Tool shows that's the case: 2548 such grades in 2020 compared to 4528 in 2019. What is going on?
 
 It's true that instructors were encouraged to be more accommodating as students and colleagues dealt with the effects of COVID, lockdown and hastily-improvised online instruction. There's more to the story, though.
 
 Students were also given unprecedented leeway to opt for credit/no-credit grades instead of standard letter grades like A and B. Students were even free to opt for credit/no-credit in their major courses, which had never been allowed before.
 
-Fact: the U of I GPA Dataset only includes letter grades and excludes credit/no-credit. This means we can't completely gauge the effect of COVID on course grades. However, we can say that the 2020 students who opted to keep letter grades were more likely to be very high-performing.
+Since the U of I GPA Dataset only includes letter grades, there's no information on credit/no-credit frequency. This means we can't completely gauge the effect of COVID on course grades. However, we can say that the 2020 students who opted to keep letter grades were more likely to earn the highest ones.
 
 ## Project Details
 
 ### The [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa)
 
-As mentioned above, the data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2019. Grades are summarized by semester, course, and primary instructor name.
+As mentioned above, the data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2020. Grades are summarized by semester, course, and primary instructor name.
 
 This dataset was provided to meet a number of FOIA requests. It includes grades from courses of more than 20 students where not all students earned the same grade. Smaller courses and uniformly-graded courses were excluded for privacy reasons.
 
-The current dataset contains 2,710,856 grades awarded over ten years in 5,138 unique courses and 153 subjects. These courses were taught by 7,394 unique instructors (unique by name).
+The current dataset contains 3,059,641 grades awarded over eleven years in 5,509 unique courses and 163 subjects. These courses were taught by 7,990 unique instructors (unique by name).
 
-By year, grade totals range from 150,814 (2012) to 409,018 (2011). Note that the grade counts for the following semesters are much larger or smaller than the counts in neighboring semesters: Summer 2011, Spring 2012, Summer 2015 and Summer 2016. Use caution when interpreting results from those semesters.
+By year, grade totals range from 152,303 (2012) to 414,919 (2011). Note that the grade counts for the following semesters are much larger or smaller than the counts in neighboring semesters: Summer 2011, Spring 2012, Summer 2015 and Summer 2016. Use caution when interpreting results from those semesters.
 
 For any single course in a semester, grade counts range from 21 to 2,403.
 
@@ -228,7 +222,7 @@ The Bonferroni correction is considered overly conservative when the multiple te
 
 #### Statistical Power
 
-As far as identifying "true positives" goes, the tool runs into a basic problem. Normally, researchers conduct power analysis to determine how much sample data they require to detect an effect of an anticipated size. This tool doesn't have that luxury, since course grades have already been awarded. Furthermore, the tool looks for effects of any size, not an anticipated size.
+As far as identifying "true positives" goes, the tool runs into a basic problem. Normally, researchers conduct power analysis to determine how much sample data they require to detect an effect of an anticipated size. This tool doesn't have that luxury, since course grades have already been awarded, meaning the sample sizes are already fixed. Furthermore, the tool looks for effects of any size, not an anticipated size.
 
 Instead, the tool performs a kind of post-hoc power analysis. For each group in a chart, the tool computes the smallest "true" effect that could be detected at or above the specified power threshold. Then, if the group shows an effect of at least that size, the effect is displayed onscreen.
 
@@ -259,6 +253,10 @@ It might be shorter to list the work that's *not* left to do. Nevertheless, here
 
 ### Bigger Changes
 
+#### Enable Uploading of Custom Data, Groupings and Measures
+
+Not everyone is interested in grades awarded by a midwestern US university, but everyone has some type of data they're interested in. The Percentage Bar Chart Tool might offer useful functionality for interpretation of that data.
+
 #### Enable Drilldown
 
 If a viewer is curious about the differences between certain courses, it would be handy to be able to view the instructors for just those courses and get a sense of their habits in awarding grades. It would also be handy to look at grading patterns in those courses over time and check whether they might be related to changes in the instructors teaching the courses.
@@ -270,10 +268,6 @@ This could be accomplished with a dashboard or with predictive models (given suf
 It would be helpful to know whether course characteristics or instructor backgrounds were driving some of the grading differences.
 
 Simple integration would just mean linking to the course catalog and instructor websites. More complex integration would include building predictive models based on course and instructor characteristics to estimate the "proportion of difference explained" by those characteristics.
-
-#### Enable Uploading of Custom Data, Groupings and Measures
-
-Not everyone is interested in grades awarded by a midwestern US university, but everyone has some type of data they're interested in. The Percentage Bar Chart Tool might offer useful functionality for interpretation of that data.
 
 #### Add Option for A Priori Power Analysis
 
