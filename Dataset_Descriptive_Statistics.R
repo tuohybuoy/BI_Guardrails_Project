@@ -7,7 +7,7 @@ library(tidyr)
 
 # Read course grade data.
 
-CrsGrades <- read_csv("./common/data/UIUC_Course_Section_Grades.csv", col_types="iccccccccciiiiiiiiiiiiiiiidd") %>%
+CrsGrades <- read_csv("./common/data/UIUC_Course_Section_Grades.csv", col_types="icccccccccciiiiiiiiiiiiiiiidd") %>%
   # Append course title to subject and number
   mutate_at(vars(Course), list(~paste(., `Course Title`, sep=": ")))
 

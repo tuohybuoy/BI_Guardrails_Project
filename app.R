@@ -40,7 +40,7 @@ projectLink <- "https://github.com/tuohybuoy/BI_Guardrails_Project/blob/master/R
 
 # Read course grade data.
 
-CrsGrades <- read_csv("./common/data/UIUC_Course_Section_Grades.csv", col_types="iccccccccciiiiiiiiiiiiiiiidd") %>%
+CrsGrades <- read_csv("./common/data/UIUC_Course_Section_Grades.csv", col_types="icccccccccciiiiiiiiiiiiiiiidd") %>%
   # Append course title to subject and number
   mutate_at(vars(Course), list(~paste(., `Course Title`, sep=": ")))
 
@@ -54,7 +54,7 @@ groupInitField <- "Course"
 # Define filter fields and initial values for each
 filterFields <- c("Year", "Term", "Subject", "Level")
 allValChoice <- "(all)" # "All values" choice for each filter
-filterInitVals <- c("2020", "Spring", "Chemistry", allValChoice)
+filterInitVals <- c("2021", "Spring", "Chemistry", allValChoice)
 names(filterInitVals) <- filterFields
 
 # Test type choices: Binomial Exact, X2 Goodness of Fit, X2 Independence, or Auto
@@ -67,7 +67,7 @@ testType <- testTypeInitVal  # Placeholder for "Test Type" user input
 
 diffBreaks <-c(1, 5, seq(10, 20, 5), seq(30, 60, 10))
 
-# Postive differences are bloe
+# Postive differences are blue
 
 diffSizeColorsLabels <- tibble(DiffSize = diffBreaks) %>%
 {

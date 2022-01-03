@@ -3,7 +3,7 @@
 Part 1 of ?: The Percentage Bar Chart Tool
 ----------------------------------
 
-[Interact](https://tuohybuoy.shinyapps.io/uiuc_grade_explorer_with_inferential_guardrails) with the current Percentage Bar Chart Tool at [rstudio.shinyapps.io](https://rstudio.shinyapps.io).
+[Interact](https://tuohybuoy.shinyapps.io/uiuc_grade_explorer_with_inferential_guardrails) with the current Percentage Bar Chart Tool at [shinyapps.io](https://www.shinyapps.io).
 
 ## Intro
 
@@ -58,7 +58,7 @@ Here's what the Percentage Bar Chart Tool looks like:
 
 The tool uses a single dataset: the [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa) compiled by Prof. Wade Fagen-Ulmschneider, used here with his kind permission.
 
-The data summarizes letter grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2020. Please see [below](#the-university-of-illinois-gpa-dataset) for more information and descriptive statistics.
+The data summarizes letter grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through spring 2021. Please see [below](#the-university-of-illinois-gpa-dataset) for more information and descriptive statistics.
 
 ### Use Cases
 
@@ -176,19 +176,21 @@ Since the U of I GPA Dataset only includes letter grades, there's no information
 
 ### The [University of Illinois GPA Dataset](https://github.com/wadefagen/datasets/tree/master/gpa)
 
-As mentioned above, the data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through summer 2020. Grades are summarized by semester, course, and primary instructor name.
+As mentioned above, the data summarizes grades awarded at the [Champaign-Urbana campus of the University of Illinois](https://www.illinois.edu/) from spring semester 2010 through spring 2021. Grades are summarized by semester, course, and primary instructor name.
 
 This dataset was provided to meet a number of FOIA requests. It includes grades from courses of more than 20 students where not all students earned the same grade. Smaller courses and uniformly-graded courses were excluded for privacy reasons.
 
-The current dataset contains 3,059,641 grades awarded over eleven years in 5,509 unique courses and 163 subjects. These courses were taught by 7,990 unique instructors (unique by name).
+The current dataset contains 3,383,346 grades awarded over 12 years in 5,826 unique courses and 166 subjects. These courses were taught by 8,425 unique instructors (unique by name).
 
-By year, grade totals range from 152,303 (2012) to 414,919 (2011). Note that the grade counts for the following semesters are much larger or smaller than the counts in neighboring semesters: Summer 2011, Spring 2012, Summer 2015 and Summer 2016. Use caution when interpreting results from those semesters.
+By year, grade totals range from 148,352 (2021) to 414,919 (2011).
+
+*Note:* the grade counts for the following semesters are much larger or smaller than the counts in neighboring semesters: Summer 2011, Spring 2012, Summer 2015, Summer 2016 and Winter 2020. Use caution when interpreting results from those semesters. In particular, Winter 2020 seems to be a duplicate of Summer 2020.
 
 For any single course in a semester, grade counts range from 21 to 2,403.
 
 Letter grades range from A+ to F, plus "W" for students who withdrew from a course after official drop deadline.
 
-Note: "Year" in the dataset refers to calendar year, not academic year. At the UIUC campus, academic years begin in fall and end the following summer.
+*Note:* "Year" in the dataset refers to calendar year, not academic year. At the UIUC campus, academic years begin in fall and end the following summer.
 
 ### The Interface
 
@@ -202,7 +204,7 @@ The functionality would have been orders of magnitude faster to implement in Tab
 
 For each group in a chart, the tool runs an [exact binomial test](https://en.wikipedia.org/wiki/Binomial_test) to compare the group's proportion of selected grades against the proportion in all other groups in the chart.
 
-For example, if the chart shows As earned in Chemistry courses: the tool compares the percentage of As in CHEM 101 against the percentage in CHEM 102 through 584 combined. The tool then compares CHEM 102 against CHEM 101 plus 103 - 584 combined, and so on.
+For example, if the chart shows As earned in Chemistry courses: the tool compares the percentage of As in CHEM 101 against the percentage in CHEM 102 through 590 combined. The tool then compares CHEM 102 against CHEM 101 plus 103 - 590 combined, and so on.
 
 The binomial test is convenient because it gives exact p-values for groups with small numbers of grades, unlike a chi-square test which uses a theoretical distribution. Against this dataset, the binomial test runs about as fast as a chi-square test -- so there's no sacrifice in speed.
 
